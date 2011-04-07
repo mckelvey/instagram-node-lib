@@ -1,0 +1,30 @@
+{
+  "name": "instagram",
+  "description": "This package is a basic wrapper for the Instagram API.",
+  "version": "0.0.1",
+  "author": "David W. McKelvey <david@mckelveycreative.com> (http://david.mckelveycreative.com/)",
+  "contributors": [],
+  "keywords": [
+    "instagram",
+    "api",
+    "lib"
+  ],
+  "main": "./lib/class.instagram.js",
+  "engines": {
+    "node": ">= 0.4.5"
+  },
+  "directories": {
+    "lib": "./lib"
+  },
+  "files": [
+    ""
+  ],
+  "homepage": "https://github.com/mckelvey/instagram-node-lib",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mckelvey/instagram-node-lib.git"
+  },
+  "scripts": {
+    "test": "expresso ./test/instagram.js"
+  }
+}
