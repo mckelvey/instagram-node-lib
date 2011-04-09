@@ -9,10 +9,14 @@ Instagram = require '../lib/class.instagram'
 Setup Temp App for Subscription Testing
 ###
 
-HOST = if process.env['TEST_HOST']? then process.env['TEST_HOST'] else 'your.callback.app'
-PORT = if process.env['TEST_PORT']? then process.env['TEST_PORT'] else 3000
-PATH = '/subscribe'
-CALLBACK_URL = "http://#{HOST}:#{PORT}#{PATH}"
+url = require 'url'
+
+CALLBACK_URL = if process.env['CALLBACK_URL']? then process.env['CALLBACK_URL'] else "http://your.callback/url"
+callback = url.parse CALLBACK_URL
+
+if callback?
+  HOST = callback['hostname']
+  PORT = if typeof callback['port'] isnt 'undefined' then callback['port'] else null
 
 express = require 'express'
 app = express.createServer()

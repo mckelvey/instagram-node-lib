@@ -1,15 +1,18 @@
 (function() {
   /*
   Setup Lib for Testing
-  */  var CALLBACK_URL, HOST, Instagram, PATH, PORT, app, assert, completed, express, iterations, k, should, to_do, waiting;
+  */  var CALLBACK_URL, HOST, Instagram, PORT, app, assert, callback, completed, express, iterations, k, should, to_do, url, waiting;
   Instagram = require('../lib/class.instagram');
   /*
   Setup Temp App for Subscription Testing
   */
-  HOST = process.env['TEST_HOST'] != null ? process.env['TEST_HOST'] : 'your.callback.app';
-  PORT = process.env['TEST_PORT'] != null ? process.env['TEST_PORT'] : 3000;
-  PATH = '/subscribe';
-  CALLBACK_URL = "http://" + HOST + ":" + PORT + PATH;
+  url = require('url');
+  CALLBACK_URL = process.env['CALLBACK_URL'] != null ? process.env['CALLBACK_URL'] : "http://your.callback/url";
+  callback = url.parse(CALLBACK_URL);
+  if (callback != null) {
+    HOST = callback['hostname'];
+    PORT = typeof callback['port'] !== 'undefined' ? callback['port'] : null;
+  }
   express = require('express');
   app = express.createServer();
   app.configure(function() {
