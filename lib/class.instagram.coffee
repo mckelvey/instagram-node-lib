@@ -109,4 +109,4 @@ class InstagramAPI
     request.end()
 
 APIClient = new InstagramAPI
-exports.API = APIClient
+module.exports = APIClient

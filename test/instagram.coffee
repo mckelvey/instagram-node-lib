@@ -28,7 +28,7 @@ app.configure 'development', ->
 
 app.get PATH,
   (request, response) ->
-    Instagram.API.subscriptions.handshake request, response
+    Instagram.subscriptions.handshake request, response
 
 app.listen PORT
 
@@ -44,7 +44,7 @@ completed = 0
 
 module.exports =
   'tags#info for blue': ->
-    Instagram.API.tags.info {
+    Instagram.tags.info {
       name: 'blue'
       complete: (data) ->
         data.should.have.property 'name', 'blue'
@@ -52,7 +52,7 @@ module.exports =
         completed += 1
     }
   'tags#recent for blue': ->
-    Instagram.API.tags.recent {
+    Instagram.tags.recent {
       name: 'blue'
       complete: (data) ->
         data.length.should.equal 20
@@ -60,7 +60,7 @@ module.exports =
         completed += 1
     }
   'tags#search for blue': ->
-    Instagram.API.tags.search {
+    Instagram.tags.search {
       q: 'blue'
       complete: (data) ->
         data.length.should.equal 50
@@ -69,7 +69,7 @@ module.exports =
         completed += 1
     }
   'locations#info for id#1': ->
-    Instagram.API.locations.info {
+    Instagram.locations.info {
       location_id: 1
       complete: (data) ->
         data.should.have.property 'name', 'Dogpatch Labs'
@@ -78,7 +78,7 @@ module.exports =
         completed += 1
     }
   'locations#recent for id#1': ->
-    Instagram.API.locations.recent {
+    Instagram.locations.recent {
       location_id: 1
       complete: (data) ->
         data.length.should.be.above 0
@@ -86,7 +86,7 @@ module.exports =
         completed += 1
     }
   'locations#search for 48.858844300000001/2.2943506': ->
-    Instagram.API.locations.search {
+    Instagram.locations.search {
       lat: 48.858844300000001
       lng: 2.2943506
       complete: (data) ->
@@ -96,14 +96,14 @@ module.exports =
         completed += 1
     }
   'media#popular': ->
-    Instagram.API.media.popular {
+    Instagram.media.popular {
       complete: (data) ->
         data.length.should.equal 32
         data[0].should.have.property 'id'
         completed += 1
     }
   'media#info for id#3': ->
-    Instagram.API.media.info {
+    Instagram.media.info {
       media_id: 3
       complete: (data) ->
         data.should.have.property 'id', '3'
@@ -111,21 +111,21 @@ module.exports =
         completed += 1
     }
   'media#likes for id#3': ->
-    Instagram.API.media.likes {
+    Instagram.media.likes {
       media_id: 3
       complete: (data) ->
         data.length.should.be.above 0
         completed += 1
     }
   'media#comments for id#3': ->
-    Instagram.API.media.comments {
+    Instagram.media.comments {
       media_id: 3
       complete: (data) ->
         data.length.should.be.above 0
         completed += 1
     }
   'media#search for 48.858844300000001/2.2943506': ->
-    Instagram.API.media.search {
+    Instagram.media.search {
       lat: 48.858844300000001
       lng: 2.2943506
       complete: (data) ->
@@ -134,7 +134,7 @@ module.exports =
         completed += 1
     }
   'users#info for id#291024': ->
-    Instagram.API.users.info {
+    Instagram.users.info {
       user_id: 291024
       complete: (data) ->
         data.should.have.property 'id', '291024'
@@ -142,7 +142,7 @@ module.exports =
         completed += 1
     }
   'users#search for mckelvey': ->
-    Instagram.API.users.search {
+    Instagram.users.search {
       q: 'mckelvey'
       complete: (data) ->
         data.length.should.be.above 0
@@ -152,19 +152,19 @@ module.exports =
     }
   'tags#subscriptions subscribe#blue, subscriptions, unsubscribe#blue#id': ->
     unsubscribe = (subscription_id) ->
-      Instagram.API.tags.unsubscribe {
+      Instagram.tags.unsubscribe {
         id: subscription_id
         complete: (data) ->
           assert.isNull data
           completed += 1
       }
     list = (subscription_id) ->
-      Instagram.API.subscriptions.list {
+      Instagram.subscriptions.list {
         complete: (data) ->
           data.should.not.be.empty
           unsubscribe subscription_id
       }
-    Instagram.API.tags.subscribe {
+    Instagram.tags.subscribe {
       object_id: 'blue'
       callback_url: CALLBACK_URL
       complete: (data) ->
@@ -175,19 +175,19 @@ module.exports =
     }
   'locations#subscriptions subscribe#1257285, subscriptions, unsubscribe#1257285#id': ->
     unsubscribe = (subscription_id) ->
-      Instagram.API.locations.unsubscribe {
+      Instagram.locations.unsubscribe {
         id: subscription_id
         complete: (data) ->
           assert.isNull data
           completed += 1
       }
     list = (subscription_id) ->
-      Instagram.API.subscriptions.list {
+      Instagram.subscriptions.list {
         complete: (data) ->
           data.should.not.be.empty
           unsubscribe subscription_id
       }
-    Instagram.API.locations.subscribe {
+    Instagram.locations.subscribe {
       object_id: '1257285'
       callback_url: CALLBACK_URL
       complete: (data) ->
@@ -198,19 +198,19 @@ module.exports =
     }
   'media#subscriptions subscribe#48.858844300000001/2.2943506, subscriptions, unsubscribe#48.858844300000001/2.2943506#id': ->
     unsubscribe = (subscription_id) ->
-      Instagram.API.media.unsubscribe {
+      Instagram.media.unsubscribe {
         id: subscription_id
         complete: (data) ->
           assert.isNull data
           completed += 1
       }
     list = (subscription_id) ->
-      Instagram.API.subscriptions.list {
+      Instagram.subscriptions.list {
         complete: (data) ->
           data.should.not.be.empty
           unsubscribe subscription_id
       }
-    Instagram.API.media.subscribe {
+    Instagram.media.subscribe {
       lat: 48.858844300000001
       lng: 2.2943506
       radius: 1000

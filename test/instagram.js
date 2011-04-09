@@ -25,7 +25,7 @@
     }));
   });
   app.get(PATH, function(request, response) {
-    return Instagram.API.subscriptions.handshake(request, response);
+    return Instagram.subscriptions.handshake(request, response);
   });
   app.listen(PORT);
   /*
@@ -37,7 +37,7 @@
   completed = 0;
   module.exports = {
     'tags#info for blue': function() {
-      return Instagram.API.tags.info({
+      return Instagram.tags.info({
         name: 'blue',
         complete: function(data) {
           data.should.have.property('name', 'blue');
@@ -47,7 +47,7 @@
       });
     },
     'tags#recent for blue': function() {
-      return Instagram.API.tags.recent({
+      return Instagram.tags.recent({
         name: 'blue',
         complete: function(data) {
           data.length.should.equal(20);
@@ -57,7 +57,7 @@
       });
     },
     'tags#search for blue': function() {
-      return Instagram.API.tags.search({
+      return Instagram.tags.search({
         q: 'blue',
         complete: function(data) {
           data.length.should.equal(50);
@@ -68,7 +68,7 @@
       });
     },
     'locations#info for id#1': function() {
-      return Instagram.API.locations.info({
+      return Instagram.locations.info({
         location_id: 1,
         complete: function(data) {
           data.should.have.property('name', 'Dogpatch Labs');
@@ -79,7 +79,7 @@
       });
     },
     'locations#recent for id#1': function() {
-      return Instagram.API.locations.recent({
+      return Instagram.locations.recent({
         location_id: 1,
         complete: function(data) {
           data.length.should.be.above(0);
@@ -89,7 +89,7 @@
       });
     },
     'locations#search for 48.858844300000001/2.2943506': function() {
-      return Instagram.API.locations.search({
+      return Instagram.locations.search({
         lat: 48.858844300000001,
         lng: 2.2943506,
         complete: function(data) {
@@ -101,7 +101,7 @@
       });
     },
     'media#popular': function() {
-      return Instagram.API.media.popular({
+      return Instagram.media.popular({
         complete: function(data) {
           data.length.should.equal(32);
           data[0].should.have.property('id');
@@ -110,7 +110,7 @@
       });
     },
     'media#info for id#3': function() {
-      return Instagram.API.media.info({
+      return Instagram.media.info({
         media_id: 3,
         complete: function(data) {
           data.should.have.property('id', '3');
@@ -120,7 +120,7 @@
       });
     },
     'media#likes for id#3': function() {
-      return Instagram.API.media.likes({
+      return Instagram.media.likes({
         media_id: 3,
         complete: function(data) {
           data.length.should.be.above(0);
@@ -129,7 +129,7 @@
       });
     },
     'media#comments for id#3': function() {
-      return Instagram.API.media.comments({
+      return Instagram.media.comments({
         media_id: 3,
         complete: function(data) {
           data.length.should.be.above(0);
@@ -138,7 +138,7 @@
       });
     },
     'media#search for 48.858844300000001/2.2943506': function() {
-      return Instagram.API.media.search({
+      return Instagram.media.search({
         lat: 48.858844300000001,
         lng: 2.2943506,
         complete: function(data) {
@@ -149,7 +149,7 @@
       });
     },
     'users#info for id#291024': function() {
-      return Instagram.API.users.info({
+      return Instagram.users.info({
         user_id: 291024,
         complete: function(data) {
           data.should.have.property('id', '291024');
@@ -159,7 +159,7 @@
       });
     },
     'users#search for mckelvey': function() {
-      return Instagram.API.users.search({
+      return Instagram.users.search({
         q: 'mckelvey',
         complete: function(data) {
           data.length.should.be.above(0);
@@ -172,7 +172,7 @@
     'tags#subscriptions subscribe#blue, subscriptions, unsubscribe#blue#id': function() {
       var list, unsubscribe;
       unsubscribe = function(subscription_id) {
-        return Instagram.API.tags.unsubscribe({
+        return Instagram.tags.unsubscribe({
           id: subscription_id,
           complete: function(data) {
             assert.isNull(data);
@@ -181,14 +181,14 @@
         });
       };
       list = function(subscription_id) {
-        return Instagram.API.subscriptions.list({
+        return Instagram.subscriptions.list({
           complete: function(data) {
             data.should.not.be.empty;
             return unsubscribe(subscription_id);
           }
         });
       };
-      return Instagram.API.tags.subscribe({
+      return Instagram.tags.subscribe({
         object_id: 'blue',
         callback_url: CALLBACK_URL,
         complete: function(data) {
@@ -202,7 +202,7 @@
     'locations#subscriptions subscribe#1257285, subscriptions, unsubscribe#1257285#id': function() {
       var list, unsubscribe;
       unsubscribe = function(subscription_id) {
-        return Instagram.API.locations.unsubscribe({
+        return Instagram.locations.unsubscribe({
           id: subscription_id,
           complete: function(data) {
             assert.isNull(data);
@@ -211,14 +211,14 @@
         });
       };
       list = function(subscription_id) {
-        return Instagram.API.subscriptions.list({
+        return Instagram.subscriptions.list({
           complete: function(data) {
             data.should.not.be.empty;
             return unsubscribe(subscription_id);
           }
         });
       };
-      return Instagram.API.locations.subscribe({
+      return Instagram.locations.subscribe({
         object_id: '1257285',
         callback_url: CALLBACK_URL,
         complete: function(data) {
@@ -232,7 +232,7 @@
     'media#subscriptions subscribe#48.858844300000001/2.2943506, subscriptions, unsubscribe#48.858844300000001/2.2943506#id': function() {
       var list, unsubscribe;
       unsubscribe = function(subscription_id) {
-        return Instagram.API.media.unsubscribe({
+        return Instagram.media.unsubscribe({
           id: subscription_id,
           complete: function(data) {
             assert.isNull(data);
@@ -241,14 +241,14 @@
         });
       };
       list = function(subscription_id) {
-        return Instagram.API.subscriptions.list({
+        return Instagram.subscriptions.list({
           complete: function(data) {
             data.should.not.be.empty;
             return unsubscribe(subscription_id);
           }
         });
       };
-      return Instagram.API.media.subscribe({
+      return Instagram.media.subscribe({
         lat: 48.858844300000001,
         lng: 2.2943506,
         radius: 1000,

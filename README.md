@@ -9,10 +9,10 @@ Following is an example that loads the library, sets my CLIENT_ID and CLIENT_SEC
 
     Instagram = require('instagram');
 
-    Instagram.API.set('client_id', 'YOUR-CLIENT-ID');
-    Instagram.API.set('client_secret', 'YOUR-CLIENT-SECRET');
+    Instagram.set('client_id', 'YOUR-CLIENT-ID');
+    Instagram.set('client_secret', 'YOUR-CLIENT-SECRET');
 
-    Instagram.API.tags.info({
+    Instagram.tags.info({
       name: 'blue',
       complete: function(data){
         console.log(data);
@@ -31,12 +31,12 @@ To use the library, you'll need to require it and at minimum, set your CLIENT_ID
 
     Instagram = require('instagram');
 
-    Instagram.API.set('client_id', 'YOUR-CLIENT-ID');
-    Instagram.API.set('client_secret', 'YOUR-CLIENT-SECRET');
+    Instagram.set('client_id', 'YOUR-CLIENT-ID');
+    Instagram.set('client_secret', 'YOUR-CLIENT-SECRET');
 
 Optionally, if you intend to use the real-time API to manage subscriptions, then you can also set a global callback url. (You may also provide/override the callback url when subscribing.)
 
-    Instagram.API.set('callback_url', 'http://your.callback/path');
+    Instagram.set('callback_url', 'http://your.callback/path');
 
 ## Available Methods
 
@@ -68,7 +68,7 @@ The following media methods are available. Required parameters are shown below, 
 
 Get the a set of 32 current popular media, each with all it's associated likes and comments.
 
-    Instagram.API.media.popular();
+    Instagram.media.popular();
       ->  [ { media object },
             { media object },
             { media object }, ... ]
@@ -77,14 +77,14 @@ Get the a set of 32 current popular media, each with all it's associated likes a
 
 Get the metadata for a single media item by media id.
 
-    Instagram.API.media.info({ media_id: 3 });
+    Instagram.media.info({ media_id: 3 });
       ->  { media object }
 
 #### Search
 
 With a latitude and longitude (and an optional distance), find nearby media by geography.
 
-    Instagram.API.media.search({ lat: 48.858844300000001, lng: 2.2943506 });
+    Instagram.media.search({ lat: 48.858844300000001, lng: 2.2943506 });
       ->  [ { media object },
             { media object },
             { media object }, ... ]
@@ -93,7 +93,7 @@ With a latitude and longitude (and an optional distance), find nearby media by g
 
 Akin to an info request, this method only returns an array of likers for the media.
 
-    Instagram.API.media.likes({ media_id: 3 });
+    Instagram.media.likes({ media_id: 3 });
       ->  [ { username: 'krisrak',
               profile_picture: 'http://profile/path.jpg',
               id: '#',
@@ -107,7 +107,7 @@ Akin to an info request, this method only returns an array of likers for the med
 
 Akin to an info request, this method only returns an array of comments on the media.
 
-    Instagram.API.media.comments({ media_id: 3 });
+    Instagram.media.comments({ media_id: 3 });
       ->  [ { created_time: '1279306830',
               text: 'Love the sign here',
               from: 
@@ -129,7 +129,7 @@ Akin to an info request, this method only returns an array of comments on the me
 
 Geography subscriptions for media are also available with the following methods. A `callback_url` is required if not specified globally, and you may also provide a `verify_token` if you want to keep track of which subscription is coming back. Note that while `unsubscribe` is identical to the generic subscriptions method below, here, `unsubscribe_all` only removes geography subscriptions.
 
-    Instagram.API.media.subscribe({ lat: 48.858844300000001, lng: 2.2943506, radius: 1000 });
+    Instagram.media.subscribe({ lat: 48.858844300000001, lng: 2.2943506, radius: 1000 });
       ->  { object: 'geography',
             object_id: '#',
             aspect: 'media',
@@ -137,10 +137,10 @@ Geography subscriptions for media are also available with the following methods.
             type: 'subscription',
             id: '#' }
 
-    Instagram.API.media.unsubscribe({ id: # });
+    Instagram.media.unsubscribe({ id: # });
       ->  null // null is success, an error is failure
 
-    Instagram.API.media.unsubscribe_all();
+    Instagram.media.unsubscribe_all();
       ->  null // null is success, an error is failure
 
 ### Tags
@@ -151,14 +151,14 @@ The following tag methods are available. Required parameters are shown below, se
 
 Get the metadata for a single tag by name.
 
-    Instagram.API.tags.info({ name: 'blue' });
+    Instagram.tags.info({ name: 'blue' });
       ->  { media_count: 10863, name: 'blue' }
 
 #### Recent
 
 Get an array of media that have been tagged with the tag recently.
 
-    Instagram.API.tags.recent({ name: 'blue' });
+    Instagram.tags.recent({ name: 'blue' });
       ->  [ { media object },
             { media object },
             { media object }, ... ]
@@ -167,7 +167,7 @@ Get an array of media that have been tagged with the tag recently.
 
 Search for matching tags by name (q).
 
-    Instagram.API.tags.search({ q: 'blue' });
+    Instagram.tags.search({ q: 'blue' });
       ->  [ { media_count: 10872, name: 'blue' },
             { media_count: 931, name: 'bluesky' },
             { media_count: 178, name: 'blueeyes' }, ... ]
@@ -176,7 +176,7 @@ Search for matching tags by name (q).
 
 Tag subscriptions are also available with the following methods. A `callback_url` is required if not specified globally, and you may also provide a `verify_token` if you want to keep track of which subscription is coming back. Note that while `unsubscribe` is identical to the generic subscriptions method below, here, `unsubscribe_all` only removes tag subscriptions.
 
-    Instagram.API.tags.subscribe({ object_id: 'blue' });
+    Instagram.tags.subscribe({ object_id: 'blue' });
       ->  { object: 'tag',
             object_id: 'blue',
             aspect: 'media',
@@ -184,10 +184,10 @@ Tag subscriptions are also available with the following methods. A `callback_url
             type: 'subscription',
             id: '#' }
 
-    Instagram.API.tags.unsubscribe({ id: # });
+    Instagram.tags.unsubscribe({ id: # });
       ->  null // null is success, an error is failure
 
-    Instagram.API.tags.unsubscribe_all();
+    Instagram.tags.unsubscribe_all();
       ->  null // null is success, an error is failure
 
 ### Locations
@@ -198,7 +198,7 @@ The following location methods are available. Required parameters are shown belo
 
 Get the metadata for a single location by location id.
 
-    Instagram.API.locations.info({ location_id: 1 });
+    Instagram.locations.info({ location_id: 1 });
       ->  { latitude: 37.78265474565738,
             id: '1',
             longitude: -122.387866973877,
@@ -208,7 +208,7 @@ Get the metadata for a single location by location id.
 
 Get an array of media that have been located with the matching location (by id) recently.
 
-    Instagram.API.locations.recent({ location_id: 1 });
+    Instagram.locations.recent({ location_id: 1 });
       ->  [ { media object },
             { media object },
             { media object }, ... ]
@@ -217,7 +217,7 @@ Get an array of media that have been located with the matching location (by id) 
 
 With a latitude and longitude (and an optional distance), find nearby locations by geography.
 
-    Instagram.API.locations.search({ lat: 48.858844300000001, lng: 2.2943506 });
+    Instagram.locations.search({ lat: 48.858844300000001, lng: 2.2943506 });
       ->  [ { latitude: 48.8588443,
               id: '723695',
               longitude: 2.2943506,
@@ -235,7 +235,7 @@ With a latitude and longitude (and an optional distance), find nearby locations 
 
 Location subscriptions are also available with the following methods. A `callback_url` is required when subscribing if not specified globally, and you may also provide a `verify_token` if you want to keep track of which subscription is coming back. Note that while `unsubscribe` is identical to the generic subscriptions method below, here, `unsubscribe_all` only removes location subscriptions.
 
-    Instagram.API.locations.subscribe({ object_id: '1257285' });
+    Instagram.locations.subscribe({ object_id: '1257285' });
       ->  { object: 'location',
             object_id: '1257285',
             aspect: 'media',
@@ -243,10 +243,10 @@ Location subscriptions are also available with the following methods. A `callbac
             type: 'subscription',
             id: '#' }
 
-    Instagram.API.locations.unsubscribe({ id: # });
+    Instagram.locations.unsubscribe({ id: # });
       ->  null // null is success, an error is failure
 
-    Instagram.API.locations.unsubscribe_all();
+    Instagram.locations.unsubscribe_all();
       ->  null // null is success, an error is failure
 
 ### Users
@@ -257,7 +257,7 @@ The following user methods are available. Required parameters are shown below, s
 
 Get the metadata for a single user by user id.
 
-    Instagram.API.users.info({ user_id: 291024 });
+    Instagram.users.info({ user_id: 291024 });
       ->  { username: 'mckelvey',
             counts: { media: 526, followed_by: 293, follows: 265 },
             profile_picture: 'http://profile/path.jpg',
@@ -268,7 +268,7 @@ Get the metadata for a single user by user id.
 
 Search for matching users by name (q).
 
-    Instagram.API.users.search({ q: 'mckelvey' });
+    Instagram.users.search({ q: 'mckelvey' });
       ->  [ { username: 'mckelvey',
               profile_picture: 'http://profile/path.jpg',
               id: '291024',
@@ -282,7 +282,7 @@ In addition to the above subscription methods within tags, locations and media, 
 
 The subscription request differs here in that it will not know what kind of object (tag, location, geography) to which you want to subscribe, so be sure to specify it. A `callback_url` is required when subscribing if not specified globally, and you may also provide a `verify_token` if you want to keep track of which subscription is coming back.
 
-    Instagram.API.subscribe({ object: 'tag', object_id: 'blue' });
+    Instagram.subscribe({ object: 'tag', object_id: 'blue' });
       ->  { object: 'tag',
             object_id: 'blue',
             aspect: 'media',
@@ -294,7 +294,7 @@ The subscription request differs here in that it will not know what kind of obje
 
 Retrieve a list of all your subscriptions.
 
-    Instagram.API.subscriptions();
+    Instagram.subscriptions();
       ->  [ { object: 'tag',
               object_id: 'blue',
               aspect: 'media',
@@ -306,14 +306,14 @@ Retrieve a list of all your subscriptions.
 
 To unsubscribe from a single subscription, you must provide the subscription id.
 
-    Instagram.API.unsubscribe({ id: # });
+    Instagram.unsubscribe({ id: # });
       ->  null // null is success, an error is failure
 
 #### Unsubscribe All
 
 Unsubscribe from all subscriptions of all kinds.
 
-    Instagram.API.unsubscribe_all();
+    Instagram.unsubscribe_all();
       ->  null // null is success, an error is failure
 
 ## Developers
