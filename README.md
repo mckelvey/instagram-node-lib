@@ -42,7 +42,9 @@ Optionally, if you intend to use the real-time API to manage subscriptions, then
 
 _The methods currently available are limited to those available for non-user-specific interaction (i.e. anything that does not require authentication and an access_token). Look for those in future releases._
 
-All of the methods below follow a similar pattern. Each accepts a single javascript object with the needed parameters to complete the API call. Required parameters are shown below; refer to [the API docs](http://instagram.com/developer/endpoints/) for the optional parameters. In addition, the parameters object may include two functions, one of which will be executed at the conclusion of the request (i.e. `complete` and `error`).
+All of the methods below follow a similar pattern. Each accepts a single javascript object with the needed parameters to complete the API call. Required parameters are shown below; refer to [the API docs](http://instagram.com/developer/endpoints/) for the optional parameters. All parameters are passed through to the request, so use the exact terms that the API docs provide.
+
+In addition, the parameters object may include two functions, one of which will be executed at the conclusion of the request (i.e. `complete` and `error`).
 
     {
       name: 'blue',
@@ -125,7 +127,7 @@ Akin to an info request, this method only returns an array of comments on the me
 
 #### Subscriptions
 
-Geography subscriptions for media are also available with the following methods. A `callback_url` is required if not specified globally, and you may also provide a `verify_token` if you want to keep track of which subscription is coming back.
+Geography subscriptions for media are also available with the following methods. A `callback_url` is required if not specified globally, and you may also provide a `verify_token` if you want to keep track of which subscription is coming back. Note that while `unsubscribe` is identical to the generic subscriptions method below, here, `unsubscribe_all` only removes geography subscriptions.
 
     Instagram.API.media.subscribe({ lat: 48.858844300000001, lng: 2.2943506, radius: 1000 });
       ->  { object: 'geography',
@@ -139,7 +141,7 @@ Geography subscriptions for media are also available with the following methods.
       ->  null // null is success, an error is failure
 
     Instagram.API.media.unsubscribe_all();
-      ->  
+      ->  null // null is success, an error is failure
 
 ### Tags
 
@@ -172,7 +174,7 @@ Search for matching tags by name (q).
 
 #### Subscriptions
 
-Tag subscriptions are also available with the following methods. A `callback_url` is required if not specified globally, and you may also provide a `verify_token` if you want to keep track of which subscription is coming back.
+Tag subscriptions are also available with the following methods. A `callback_url` is required if not specified globally, and you may also provide a `verify_token` if you want to keep track of which subscription is coming back. Note that while `unsubscribe` is identical to the generic subscriptions method below, here, `unsubscribe_all` only removes tag subscriptions.
 
     Instagram.API.tags.subscribe({ object_id: 'blue' });
       ->  { object: 'tag',
@@ -186,7 +188,7 @@ Tag subscriptions are also available with the following methods. A `callback_url
       ->  null // null is success, an error is failure
 
     Instagram.API.tags.unsubscribe_all();
-      ->  
+      ->  null // null is success, an error is failure
 
 ### Locations
 
@@ -231,7 +233,7 @@ With a latitude and longitude (and an optional distance), find nearby locations 
 
 #### Subscriptions
 
-Location subscriptions are also available with the following methods. A `callback_url` is required if not specified globally, and you may also provide a `verify_token` if you want to keep track of which subscription is coming back.
+Location subscriptions are also available with the following methods. A `callback_url` is required when subscribing if not specified globally, and you may also provide a `verify_token` if you want to keep track of which subscription is coming back. Note that while `unsubscribe` is identical to the generic subscriptions method below, here, `unsubscribe_all` only removes location subscriptions.
 
     Instagram.API.locations.subscribe({ object_id: '1257285' });
       ->  { object: 'location',
@@ -245,7 +247,7 @@ Location subscriptions are also available with the following methods. A `callbac
       ->  null // null is success, an error is failure
 
     Instagram.API.locations.unsubscribe_all();
-      ->  
+      ->  null // null is success, an error is failure
 
 ### Users
 
@@ -274,10 +276,60 @@ Search for matching users by name (q).
 
 ### Real-time Subscriptions
 
+In addition to the above subscription methods within tags, locations and media, you can also interact with any subscription directly with the methods below. As with the others, it will be helpful to review the [Instagram API docs](http://instagram.com/developer/realtime/) for additional information.
 
+#### Subscribe
 
-    Instagram.API.subscriptions
+The subscription request differs here in that it will not know what kind of object (tag, location, geography) to which you want to subscribe, so be sure to specify it. A `callback_url` is required when subscribing if not specified globally, and you may also provide a `verify_token` if you want to keep track of which subscription is coming back.
 
+    Instagram.API.subscribe({ object: 'tag', object_id: 'blue' });
+      ->  { object: 'tag',
+            object_id: 'blue',
+            aspect: 'media',
+            callback_url: 'http://your.callback/path',
+            type: 'subscription',
+            id: '#' }
+
+#### Subscriptions
+
+Retrieve a list of all your subscriptions.
+
+    Instagram.API.subscriptions();
+      ->  [ { object: 'tag',
+              object_id: 'blue',
+              aspect: 'media',
+              callback_url: 'http://your.callback/path',
+              type: 'subscription',
+              id: '#' }, ... ]
+
+#### Unsubscribe
+
+To unsubscribe from a single subscription, you must provide the subscription id.
+
+    Instagram.API.unsubscribe({ id: # });
+      ->  null // null is success, an error is failure
+
+#### Unsubscribe All
+
+Unsubscribe from all subscriptions of all kinds.
+
+    Instagram.API.unsubscribe_all();
+      ->  null // null is success, an error is failure
 
 ## Developers
 
+Hey, this is my first Node.js project, my first NPM package, and my first public repo (and happy to finally be giving back for all the code I've enjoyed over the years). If you have suggestions please email me, register an issue, fork and branch, etc. (You know the routine probably better than I.)
+
+If you add additional functionality, your pull request must have corresponding additional tests and supporting documentation.
+
+I've used [CoffeeScript](http://jashkenas.github.com/coffee-script) to write this library. If you haven't tried it, I highly recommend it. CoffeeScript takes some of the work out of javascript structures, with only an occasional mis-understanding. (Definitely check your compiled code when getting an error.) Refer to the CoffeeScript docs for installation and usage. 
+
+### Tests
+
+There is a test suite in the /tests folder with the tests I used to ensure the library functions as intended. If you're adding or changing functionality, please add to or update the corresponding tests before issuing a pull request. The tests require [Express](https://github.com/visionmedia/express), [Expresso](https://github.com/visionmedia/expresso) and [Should](https://github.com/visionmedia/should.js):
+
+    npm install express
+    npm install expresso
+    npm install should
+
+In addition, either export or add to your shell profile your CLIENT_ID, CLIENT_SECRET, and CALLBACK_URL so that they are available during testing via process.env.
