@@ -42,7 +42,7 @@ Optionally, if you intend to use the real-time API to manage subscriptions, then
 
 _The methods currently available are limited to those available for non-user-specific interaction (i.e. anything that does not require authentication and an access_token). Look for those in future releases._
 
-All of the methods below follow a similar pattern and stem directly from the API. All methods accept a single javascript object with the needed parameters to complete the API call ([use the API docs for those](http://instagram.com/developer/endpoints/)), plus the addition of a function to execute upon successful completion (i.e. `complete`) or an error function, should it fail (i.e. `error`).
+All of the methods below follow a similar pattern. Each accepts a single javascript object with the needed parameters to complete the API call. Required parameters are shown below; refer to [the API docs](http://instagram.com/developer/endpoints/) for the optional parameters. In addition, the parameters object may include two functions, one of which will be executed at the conclusion of the request (i.e. `complete` and `error`).
 
     {
       name: 'blue',
@@ -56,32 +56,169 @@ All of the methods below follow a similar pattern and stem directly from the API
         }
     }
 
-In the event you do not provide a `complete` or `error` function, the library has fallback functions which simply post results to the console log.
+In the event you do not provide a `complete` or `error` function, the library has fallback functions which post results to the console log.
 
-# Tags
+### Media
 
-The following basic tag methods are available. Required parameters are shown below, see the [Instagram API docs](http://instagram.com/developer/endpoints/tags/) for the optional parameters.
+The following media methods are available. Required parameters are shown below, see the [Instagram API docs](http://instagram.com/developer/endpoints/media/) for the optional parameters.
+
+    Instagram.API.media.info({ media_id: 3 });
+      ->  { media object }
+
+    Instagram.API.media.search({ lat: 48.858844300000001, lng: 2.2943506 });
+      ->  [ { media object },
+            { media object },
+            { media object }, ... ]
+
+    Instagram.API.media.popular();
+      ->  [ { media object },
+            { media object },
+            { media object }, ... ]
+
+    Instagram.API.media.likes({ media_id: 3 });
+      ->  [ { username: 'krisrak',
+              profile_picture: 'http://profile/path.jpg',
+              id: '#',
+              full_name: 'Rak Kris' },
+            { username: 'mikeyk',
+              profile_picture: 'http://profile/path.jpg',
+              id: '#',
+              full_name: 'Mike Krieger' } ]
+
+    Instagram.API.media.comments({ media_id: 3 });
+      ->  [ { created_time: '1279306830',
+              text: 'Love the sign here',
+              from: 
+               { username: 'mikeyk',
+                 profile_picture: 'http://profile/path.jpg',
+                 id: '#',
+                 full_name: 'Mike Krieger' },
+              id: '8' },
+            { created_time: '1279315804',
+              text: 'Chilako taco',
+              from: 
+               { username: 'kevin',
+                 profile_picture: 'http://profile/path.jpg',
+                 id: '#',
+                 full_name: 'Kevin Systrom' },
+              id: '3' } ]
+
+Geography subscriptions for media are also available with the following methods. A `callback_url` is required if not specified globally, and you may also provide a `verify_token` if you want to keep track of which subscription is coming back.
+
+    Instagram.API.media.subscribe({ lat: 48.858844300000001, lng: 2.2943506, radius: 1000 });
+      ->  { object: 'geography',
+            object_id: '#',
+            aspect: 'media',
+            callback_url: 'http://your.callback/path',
+            type: 'subscription',
+            id: '#' }
+
+    Instagram.API.tags.unsubscribe({ id: # });
+      ->  null // null is success, an error is failure
+
+    Instagram.API.tags.unsubscribe_all();
+      ->  
+
+### Tags
+
+The following tag methods are available. Required parameters are shown below, see the [Instagram API docs](http://instagram.com/developer/endpoints/tags/) for the optional parameters.
 
     Instagram.API.tags.info({ name: 'blue' });
       ->  { media_count: 10863, name: 'blue' }
 
     Instagram.API.tags.recent({ name: 'blue' });
-      ->  [ {media object},
-            {media object},
-            {media object}, ... ]
+      ->  [ { media object },
+            { media object },
+            { media object }, ... ]
 
     Instagram.API.tags.search({ q: 'blue' });
       ->  [ { media_count: 10872, name: 'blue' },
             { media_count: 931, name: 'bluesky' },
             { media_count: 178, name: 'blueeyes' }, ... ]
 
-Subscriptions for tags are also available with the following methods. A `callback_url` is required if not specified globally, and you may also provide a `verify_token` if you want to keep track of which subscription is coming back.
+Tag subscriptions are also available with the following methods. A `callback_url` is required if not specified globally, and you may also provide a `verify_token` if you want to keep track of which subscription is coming back.
 
     Instagram.API.tags.subscribe({ object_id: 'blue' });
-      -> {}
+      ->  { object: 'tag',
+            object_id: 'blue',
+            aspect: 'media',
+            callback_url: 'http://your.callback/path',
+            type: 'subscription',
+            id: '#' }
 
-    Instagram.API.tags.unsubscribe({ subscription_id: 3678 });
-      -> null
+    Instagram.API.tags.unsubscribe({ id: # });
+      ->  null // null is success, an error is failure
+
+    Instagram.API.tags.unsubscribe_all();
+      ->  
+
+### Locations
+
+The following location methods are available. Required parameters are shown below, see the [Instagram API docs](http://instagram.com/developer/endpoints/locations/) for the optional parameters.
+
+    Instagram.API.locations.info({ location_id: 1 });
+      ->  { latitude: 37.78265474565738,
+            id: '1',
+            longitude: -122.387866973877,
+            name: 'Dogpatch Labs' }
+
+    Instagram.API.locations.recent({ location_id: 1 });
+      ->  [ { media object },
+            { media object },
+            { media object }, ... ]
+
+    Instagram.API.locations.search({ lat: 48.858844300000001, lng: 2.2943506 });
+      ->  [ { latitude: 48.8588443,
+              id: '723695',
+              longitude: 2.2943506,
+              name: 'Restaurant Jules Verne' },
+            { latitude: 48.8588443,
+              id: '788029',
+              longitude: 2.2943506,
+              name: 'Eiffel Tower, Paris' },
+            { latitude: 48.858543,
+              id: '1894075',
+              longitude: 2.2938285,
+              name: 'CafŽ de l\'homme' }, ... ]
+
+Location subscriptions are also available with the following methods. A `callback_url` is required if not specified globally, and you may also provide a `verify_token` if you want to keep track of which subscription is coming back.
+
+    Instagram.API.locations.subscribe({ object_id: '1257285' });
+      ->  { object: 'location',
+            object_id: '1257285',
+            aspect: 'media',
+            callback_url: 'http://your.callback/path',
+            type: 'subscription',
+            id: '#' }
+
+    Instagram.API.locations.unsubscribe({ id: # });
+      ->  null // null is success, an error is failure
+
+    Instagram.API.locations.unsubscribe_all();
+      ->  
+
+### Users
+
+The following user methods are available. Required parameters are shown below, see the [Instagram API docs](http://instagram.com/developer/endpoints/users/) for the optional parameters.
+
+    Instagram.API.users.info({ user_id: 291024 });
+      ->  { username: 'mckelvey',
+            counts: { media: 526, followed_by: 293, follows: 265 },
+            profile_picture: 'http://profile/path.jpg',
+            id: '291024',
+            full_name: 'David McKelvey' }
+
+    Instagram.API.users.search({ q: 'mckelvey' });
+      ->  [ { username: 'mckelvey',
+              profile_picture: 'http://profile/path.jpg',
+              id: '291024',
+              full_name: 'David McKelvey' }, ... ]
+
+### Real-time Subscriptions
+
+
+
+    Instagram.API.subscriptions
 
 
 ## Developers
