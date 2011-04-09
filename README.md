@@ -156,7 +156,7 @@ Get the metadata for a single tag by name.
 
 #### Recent
 
-Get an array of media that have been tagged with the tag recently.
+Get an array of media that have been tagged with the tag recently. You can use the optional parameter `max_id` which will limit the resulting media to earlier media ids, but not in predictable ways. For example, I used a max_id of 100000 and still received media 
 
     Instagram.tags.recent({ name: 'blue' });
       ->  [ { media object },
