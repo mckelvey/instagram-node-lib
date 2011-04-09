@@ -62,18 +62,34 @@ In the event you do not provide a `complete` or `error` function, the library ha
 
 The following media methods are available. Required parameters are shown below, see the [Instagram API docs](http://instagram.com/developer/endpoints/media/) for the optional parameters.
 
+#### Popular
+
+Get the a set of 32 current popular media, each with all it's associated likes and comments.
+
+    Instagram.API.media.popular();
+      ->  [ { media object },
+            { media object },
+            { media object }, ... ]
+
+#### Info
+
+Get the metadata for a single media item by media id.
+
     Instagram.API.media.info({ media_id: 3 });
       ->  { media object }
+
+#### Search
+
+With a latitude and longitude (and an optional distance), find nearby media by geography.
 
     Instagram.API.media.search({ lat: 48.858844300000001, lng: 2.2943506 });
       ->  [ { media object },
             { media object },
             { media object }, ... ]
 
-    Instagram.API.media.popular();
-      ->  [ { media object },
-            { media object },
-            { media object }, ... ]
+#### Likes
+
+Akin to an info request, this method only returns an array of likers for the media.
 
     Instagram.API.media.likes({ media_id: 3 });
       ->  [ { username: 'krisrak',
@@ -84,6 +100,10 @@ The following media methods are available. Required parameters are shown below, 
               profile_picture: 'http://profile/path.jpg',
               id: '#',
               full_name: 'Mike Krieger' } ]
+
+#### Comments
+
+Akin to an info request, this method only returns an array of comments on the media.
 
     Instagram.API.media.comments({ media_id: 3 });
       ->  [ { created_time: '1279306830',
@@ -103,6 +123,8 @@ The following media methods are available. Required parameters are shown below, 
                  full_name: 'Kevin Systrom' },
               id: '3' } ]
 
+#### Subscriptions
+
 Geography subscriptions for media are also available with the following methods. A `callback_url` is required if not specified globally, and you may also provide a `verify_token` if you want to keep track of which subscription is coming back.
 
     Instagram.API.media.subscribe({ lat: 48.858844300000001, lng: 2.2943506, radius: 1000 });
@@ -113,28 +135,42 @@ Geography subscriptions for media are also available with the following methods.
             type: 'subscription',
             id: '#' }
 
-    Instagram.API.tags.unsubscribe({ id: # });
+    Instagram.API.media.unsubscribe({ id: # });
       ->  null // null is success, an error is failure
 
-    Instagram.API.tags.unsubscribe_all();
+    Instagram.API.media.unsubscribe_all();
       ->  
 
 ### Tags
 
 The following tag methods are available. Required parameters are shown below, see the [Instagram API docs](http://instagram.com/developer/endpoints/tags/) for the optional parameters.
 
+#### Info
+
+Get the metadata for a single tag by name.
+
     Instagram.API.tags.info({ name: 'blue' });
       ->  { media_count: 10863, name: 'blue' }
+
+#### Recent
+
+Get an array of media that have been tagged with the tag recently.
 
     Instagram.API.tags.recent({ name: 'blue' });
       ->  [ { media object },
             { media object },
             { media object }, ... ]
 
+#### Search
+
+Search for matching tags by name (q).
+
     Instagram.API.tags.search({ q: 'blue' });
       ->  [ { media_count: 10872, name: 'blue' },
             { media_count: 931, name: 'bluesky' },
             { media_count: 178, name: 'blueeyes' }, ... ]
+
+#### Subscriptions
 
 Tag subscriptions are also available with the following methods. A `callback_url` is required if not specified globally, and you may also provide a `verify_token` if you want to keep track of which subscription is coming back.
 
@@ -156,16 +192,28 @@ Tag subscriptions are also available with the following methods. A `callback_url
 
 The following location methods are available. Required parameters are shown below, see the [Instagram API docs](http://instagram.com/developer/endpoints/locations/) for the optional parameters.
 
+#### Info
+
+Get the metadata for a single location by location id.
+
     Instagram.API.locations.info({ location_id: 1 });
       ->  { latitude: 37.78265474565738,
             id: '1',
             longitude: -122.387866973877,
             name: 'Dogpatch Labs' }
 
+#### Recent
+
+Get an array of media that have been located with the matching location (by id) recently.
+
     Instagram.API.locations.recent({ location_id: 1 });
       ->  [ { media object },
             { media object },
             { media object }, ... ]
+
+#### Search
+
+With a latitude and longitude (and an optional distance), find nearby locations by geography.
 
     Instagram.API.locations.search({ lat: 48.858844300000001, lng: 2.2943506 });
       ->  [ { latitude: 48.8588443,
@@ -180,6 +228,8 @@ The following location methods are available. Required parameters are shown belo
               id: '1894075',
               longitude: 2.2938285,
               name: 'CafŽ de l\'homme' }, ... ]
+
+#### Subscriptions
 
 Location subscriptions are also available with the following methods. A `callback_url` is required if not specified globally, and you may also provide a `verify_token` if you want to keep track of which subscription is coming back.
 
@@ -201,12 +251,20 @@ Location subscriptions are also available with the following methods. A `callbac
 
 The following user methods are available. Required parameters are shown below, see the [Instagram API docs](http://instagram.com/developer/endpoints/users/) for the optional parameters.
 
+#### Info
+
+Get the metadata for a single user by user id.
+
     Instagram.API.users.info({ user_id: 291024 });
       ->  { username: 'mckelvey',
             counts: { media: 526, followed_by: 293, follows: 265 },
             profile_picture: 'http://profile/path.jpg',
             id: '291024',
             full_name: 'David McKelvey' }
+
+#### Search
+
+Search for matching users by name (q).
 
     Instagram.API.users.search({ q: 'mckelvey' });
       ->  [ { username: 'mckelvey',
