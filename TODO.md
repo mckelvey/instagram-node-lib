@@ -14,3 +14,5 @@
 6. Remove subscriptions list from tags, locations, media since it's not specific to those yet.
 
 7. Make object.subscriptions list only those with a matching object.
+
+8. Add /v1/geographies to the lib. See if info or search methods exist too.
