@@ -12,5 +12,3 @@
 5. Add /v1/geographies to the lib. Test if info or search methods exist too.
 
 6. Split tests into groups by type.
-
-7. max_id and min_id on tags don't work as expected

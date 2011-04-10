@@ -43,33 +43,6 @@ module.exports =
     }
 
 ###
-
-  'tags#recent for blue with min_id': ->
-    Instagram.tags.recent {
-      name: 'blue'
-      min_id: 5000000
-      complete: (data) ->
-        data.length.should.equal 20
-        data[0].should.have.property 'id'
-        console.log "with max_id: #{data.length}"
-        console.log data[0]
-        for i of data
-          console.log data[i]['id']
-        completed += 1
-    }
-  'tags#recent for blue with min_id': ->
-    Instagram.tags.recent {
-      name: 'blue'
-      complete: (data) ->
-        data.length.should.equal 20
-        data[0].should.have.property 'id'
-        completed += 1
-    }
-
-###
-
-
-###
 Tests Reporting
 ###
 
