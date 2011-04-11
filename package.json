@@ -25,10 +25,10 @@
     "url": "git://github.com/mckelvey/instagram-node-lib.git"
   },
   "scripts": {
-    "test locations": "expresso ./test/instagram.locations.js"
-    "test media": "expresso ./test/instagram.media.js"
-    "test tags": "expresso ./test/instagram.tags.js"
-    "test users": "expresso ./test/instagram.users.js"
+    "test locations": "expresso ./test/instagram.locations.js",
+    "test media": "expresso ./test/instagram.media.js",
+    "test tags": "expresso ./test/instagram.tags.js",
+    "test users": "expresso ./test/instagram.users.js",
     "test subscriptions": "expresso ./test/instagram.subscriptions.js"
   }
 }
