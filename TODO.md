@@ -1,19 +1,13 @@
 
 ## Todo
 
-1. Unsubscribe all may fail, check sub-unsubscribe, add new tests.
+1. Add new tests for variations of requests (optional parameters).
 
-2. Add new tests for variations of requests (optional parameters).
+2. Create object.subscriptions list method that lists only subscriptions with a matching object.
 
-3. Callback url set globally fails to be available when not specified during the request.
+3. Add /v1/geographies to the lib. Test if info or search methods exist too.
 
-4. Create object.subscriptions list method that lists only subscriptions with a matching object.
-
-5. Add /v1/geographies to the lib. Test if info or search methods exist too.
-
-6. Split tests into groups by type.
-
-7. Add next page where available.
+4. Add next page where available.
 
     {
         "meta": {

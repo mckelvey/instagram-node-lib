@@ -39,7 +39,8 @@ class InstagramSubscriptions
   _subscribe: (params) ->
     params['method'] = "POST"
     params['path'] = "/#{@parent._api_version}/subscriptions/"
-    params['callback_url'] = @parent._config.callback_url if params['callback_url'] is null and @parent._config.callback_url?
+    if (typeof params['callback_url'] is 'undefined' or params['callback_url'] is null) and @parent._config.callback_url isnt null
+      params['callback_url'] = @parent._config.callback_url
     params['post_data'] =
       object: params['object']
       aspect: 'media'
@@ -64,6 +65,9 @@ class InstagramSubscriptions
   Shared Public Methods
   ###
 
+  subscribe: (params) ->
+    @_subscribe params
+
   list: (params) ->
     params = @parent._clone(params)
     params['path'] = "/#{@parent._api_version}/subscriptions?client_secret=#{@parent._config.client_secret}&client_id=#{@parent._config.client_id}"
@@ -73,7 +77,7 @@ class InstagramSubscriptions
     @_unsubscribe params
 
   unsubscribe_all: (params) ->
-    params['object'] = 'all'
+    params['object'] = 'all' if params['object'] is undefined or not params['object']?
     @_unsubscribe params
 
 exports.module = InstagramSubscriptions

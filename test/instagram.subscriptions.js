@@ -1,7 +1,7 @@
 (function() {
   /*
   Setup Lib for Testing
-  */  var CALLBACK_URL, HOST, Instagram, PORT, app, assert, callback, completed, express, iterations, k, should, to_do, url, waiting;
+  */  var CALLBACK_URL, HOST, Instagram, PATH, PORT, app, assert, callback, completed, express, i, indent, iterations, should, to_do, url, waiting;
   Instagram = require('../lib/class.instagram');
   /*
   Setup Temp App for Subscription Testing
@@ -12,6 +12,7 @@
   if (callback != null) {
     HOST = callback['hostname'];
     PORT = typeof callback['port'] !== 'undefined' ? callback['port'] : null;
+    PATH = callback['pathname'];
   }
   express = require('express');
   app = express.createServer();
@@ -36,158 +37,47 @@
   */
   assert = require('assert');
   should = require('should');
-  to_do = 0;
   completed = 0;
+  to_do = 0;
+  indent = "   ";
   module.exports = {
-    'tags#info for blue': function() {
-      return Instagram.tags.info({
-        name: 'blue',
-        complete: function(data) {
-          data.should.have.property('name', 'blue');
-          data.media_count.should.be.above(0);
-          return completed += 1;
-        }
-      });
-    },
-    'tags#recent for blue': function() {
-      return Instagram.tags.recent({
-        name: 'blue',
-        complete: function(data) {
-          data.length.should.equal(20);
-          data[0].should.have.property('id');
-          return completed += 1;
-        }
-      });
-    },
-    'tags#search for blue': function() {
-      return Instagram.tags.search({
-        q: 'blue',
-        complete: function(data) {
-          data.length.should.equal(50);
-          data[0].should.have.property('name', 'blue');
-          data[0].media_count.should.be.above(0);
-          return completed += 1;
-        }
-      });
-    },
-    'locations#info for id#1': function() {
-      return Instagram.locations.info({
-        location_id: 1,
-        complete: function(data) {
-          data.should.have.property('name', 'Dogpatch Labs');
-          data.latitude.should.be.above(0);
-          data.longitude.should.be.below(0);
-          return completed += 1;
-        }
-      });
-    },
-    'locations#recent for id#1': function() {
-      return Instagram.locations.recent({
-        location_id: 1,
-        complete: function(data) {
-          data.length.should.be.above(0);
-          data[0].should.have.property('id');
-          return completed += 1;
-        }
-      });
-    },
-    'locations#search for 48.858844300000001/2.2943506': function() {
-      return Instagram.locations.search({
-        lat: 48.858844300000001,
-        lng: 2.2943506,
-        complete: function(data) {
-          data.length.should.be.above(0);
-          data[0].should.have.property('id');
-          data[0].should.have.property('name');
-          return completed += 1;
-        }
-      });
-    },
-    'media#popular': function() {
-      return Instagram.media.popular({
-        complete: function(data) {
-          data.length.should.equal(32);
-          data[0].should.have.property('id');
-          return completed += 1;
-        }
-      });
-    },
-    'media#info for id#3': function() {
-      return Instagram.media.info({
-        media_id: 3,
-        complete: function(data) {
-          data.should.have.property('id', '3');
-          data.should.have.property('created_time', '1279315783');
-          return completed += 1;
-        }
-      });
-    },
-    'media#likes for id#3': function() {
-      return Instagram.media.likes({
-        media_id: 3,
-        complete: function(data) {
-          data.length.should.be.above(0);
-          return completed += 1;
-        }
-      });
-    },
-    'media#comments for id#3': function() {
-      return Instagram.media.comments({
-        media_id: 3,
-        complete: function(data) {
-          data.length.should.be.above(0);
-          return completed += 1;
-        }
-      });
-    },
-    'media#search for 48.858844300000001/2.2943506': function() {
-      return Instagram.media.search({
-        lat: 48.858844300000001,
-        lng: 2.2943506,
-        complete: function(data) {
-          data.length.should.be.above(0);
-          data[0].should.have.property('id');
-          return completed += 1;
-        }
-      });
-    },
-    'users#info for id#291024': function() {
-      return Instagram.users.info({
-        user_id: 291024,
-        complete: function(data) {
-          data.should.have.property('id', '291024');
-          data.should.have.property('profile_picture');
-          return completed += 1;
-        }
-      });
-    },
-    'users#search for mckelvey': function() {
-      return Instagram.users.search({
-        q: 'mckelvey',
-        complete: function(data) {
-          data.length.should.be.above(0);
-          data[0].should.have.property('username', 'mckelvey');
-          data[0].should.have.property('id', '291024');
-          return completed += 1;
-        }
-      });
-    },
-    'tags#subscriptions subscribe#blue, subscriptions, unsubscribe#blue#id': function() {
-      var list, unsubscribe;
+    'tags#subscriptions': function() {
+      var list, title, unsubscribe;
+      title = "tags#subscriptions";
       unsubscribe = function(subscription_id) {
         return Instagram.tags.unsubscribe({
           id: subscription_id,
           complete: function(data) {
-            assert.isNull(data);
-            return completed += 1;
+            console.log("\n" + title + " unsubscribe from " + subscription_id + "\n" + indent + "connection/parsing succeeded");
+            try {
+              assert.isNull(data);
+              console.log("" + indent + "data met assertions");
+              return completed += 1;
+            } catch (e) {
+              return console.log("" + indent + "data failed to meet the assertion(s): " + e);
+            }
+          },
+          error: function(e, data, caller) {
+            console.log("\n" + title + " unsubscribe\n" + indent + "connection/parsing failed");
+            return console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
           }
         });
       };
       list = function(subscription_id) {
         return Instagram.subscriptions.list({
           complete: function(data) {
-            data.should.not.be.empty;
-            return unsubscribe(subscription_id);
+            console.log("\n" + title + " list\n" + indent + "connection/parsing succeeded");
+            try {
+              data.should.not.be.empty;
+              console.log("" + indent + "data met assertions");
+              return unsubscribe(subscription_id);
+            } catch (e) {
+              return console.log("" + indent + "data failed to meet the assertion(s): " + e);
+            }
+          },
+          error: function(e, data, caller) {
+            console.log("\n" + title + " list\n" + indent + "connection/parsing failed");
+            return console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
           }
         });
       };
@@ -195,29 +85,60 @@
         object_id: 'blue',
         callback_url: CALLBACK_URL,
         complete: function(data) {
-          data.should.have.property('id');
-          data.id.should.be.above(0);
-          data.should.have.property('type', 'subscription');
-          return list(data['id']);
+          console.log("\n" + title + " subscribe#blue\n" + indent + "connection/parsing succeeded");
+          try {
+            data.should.have.property('id');
+            data.id.should.be.above(0);
+            data.should.have.property('type', 'subscription');
+            console.log("" + indent + "data met assertions");
+            return list(data['id']);
+          } catch (e) {
+            return console.log("" + indent + "data failed to meet the assertion(s): " + e);
+          }
+        },
+        error: function(e, data, caller) {
+          console.log("\n" + title + " subscribe#blue\n" + indent + "connection/parsing failed");
+          return console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
         }
       });
     },
-    'locations#subscriptions subscribe#1257285, subscriptions, unsubscribe#1257285#id': function() {
-      var list, unsubscribe;
+    'locations#subscriptions': function() {
+      var list, title, unsubscribe;
+      title = "locations#subscriptions";
       unsubscribe = function(subscription_id) {
         return Instagram.locations.unsubscribe({
           id: subscription_id,
           complete: function(data) {
-            assert.isNull(data);
-            return completed += 1;
+            console.log("\n" + title + " unsubscribe from " + subscription_id + "\n" + indent + "connection/parsing succeeded");
+            try {
+              assert.isNull(data);
+              console.log("" + indent + "data met assertions");
+              return completed += 1;
+            } catch (e) {
+              return console.log("" + indent + "data failed to meet the assertion(s): " + e);
+            }
+          },
+          error: function(e, data, caller) {
+            console.log("\n" + title + " unsubscribe\n" + indent + "connection/parsing failed");
+            return console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
           }
         });
       };
       list = function(subscription_id) {
         return Instagram.subscriptions.list({
           complete: function(data) {
-            data.should.not.be.empty;
-            return unsubscribe(subscription_id);
+            console.log("\n" + title + " list\n" + indent + "connection/parsing succeeded");
+            try {
+              data.should.not.be.empty;
+              console.log("" + indent + "data met assertions");
+              return unsubscribe(subscription_id);
+            } catch (e) {
+              return console.log("" + indent + "data failed to meet the assertion(s): " + e);
+            }
+          },
+          error: function(e, data, caller) {
+            console.log("\n" + title + " list\n" + indent + "connection/parsing failed");
+            return console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
           }
         });
       };
@@ -225,29 +146,60 @@
         object_id: '1257285',
         callback_url: CALLBACK_URL,
         complete: function(data) {
-          data.should.have.property('id');
-          data.id.should.be.above(0);
-          data.should.have.property('type', 'subscription');
-          return list(data['id']);
+          console.log("\n" + title + " subscribe#1257285\n" + indent + "connection/parsing succeeded");
+          try {
+            data.should.have.property('id');
+            data.id.should.be.above(0);
+            data.should.have.property('type', 'subscription');
+            console.log("" + indent + "data met assertions");
+            return list(data['id']);
+          } catch (e) {
+            return console.log("" + indent + "data failed to meet the assertion(s): " + e);
+          }
+        },
+        error: function(e, data, caller) {
+          console.log("\n" + title + " subscribe#1257285\n" + indent + "connection/parsing failed");
+          return console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
         }
       });
     },
-    'media#subscriptions subscribe#48.858844300000001/2.2943506, subscriptions, unsubscribe#48.858844300000001/2.2943506#id': function() {
-      var list, unsubscribe;
+    'media#subscriptions': function() {
+      var list, title, unsubscribe;
+      title = "media#subscriptions";
       unsubscribe = function(subscription_id) {
         return Instagram.media.unsubscribe({
           id: subscription_id,
           complete: function(data) {
-            assert.isNull(data);
-            return completed += 1;
+            console.log("\n" + title + " unsubscribe from " + subscription_id + "\n" + indent + "connection/parsing succeeded");
+            try {
+              assert.isNull(data);
+              console.log("" + indent + "data met assertions");
+              return completed += 1;
+            } catch (e) {
+              return console.log("" + indent + "data failed to meet the assertion(s): " + e);
+            }
+          },
+          error: function(e, data, caller) {
+            console.log("\n" + title + " unsubscribe\n" + indent + "connection/parsing failed");
+            return console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
           }
         });
       };
       list = function(subscription_id) {
         return Instagram.subscriptions.list({
           complete: function(data) {
-            data.should.not.be.empty;
-            return unsubscribe(subscription_id);
+            console.log("\n" + title + " list\n" + indent + "connection/parsing succeeded");
+            try {
+              data.should.not.be.empty;
+              console.log("" + indent + "data met assertions");
+              return unsubscribe(subscription_id);
+            } catch (e) {
+              return console.log("" + indent + "data failed to meet the assertion(s): " + e);
+            }
+          },
+          error: function(e, data, caller) {
+            console.log("\n" + title + " list\n" + indent + "connection/parsing failed");
+            return console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
           }
         });
       };
@@ -257,21 +209,112 @@
         radius: 1000,
         callback_url: CALLBACK_URL,
         complete: function(data) {
-          data.should.have.property('id');
-          data.id.should.be.above(0);
-          data.should.have.property('type', 'subscription');
-          return list(data['id']);
+          console.log("\n" + title + " subscribe#48.858844300000001/2.2943506\n" + indent + "connection/parsing succeeded");
+          try {
+            data.should.have.property('id');
+            data.id.should.be.above(0);
+            data.should.have.property('type', 'subscription');
+            console.log("" + indent + "data met assertions");
+            return list(data['id']);
+          } catch (e) {
+            return console.log("" + indent + "data failed to meet the assertion(s): " + e);
+          }
+        },
+        error: function(e, data, caller) {
+          console.log("\n" + title + " subscribe#48.858844300000001/2.2943506\n" + indent + "connection/parsing failed");
+          return console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
+        }
+      });
+    },
+    'subscriptions': function() {
+      var list, subscribe_again, title, unsubscribe;
+      title = "subscriptions";
+      unsubscribe = function(ids) {
+        return Instagram.subscriptions.unsubscribe_all({
+          complete: function(data) {
+            console.log("\n" + title + " unsubscribe_all\n" + indent + "connection/parsing succeeded");
+            try {
+              assert.isNull(data);
+              console.log("" + indent + "data met assertions");
+              return completed += 1;
+            } catch (e) {
+              return console.log("" + indent + "data failed to meet the assertion(s): " + e);
+            }
+          },
+          error: function(e, data, caller) {
+            console.log("\n" + title + " unsubscribe_all\n" + indent + "connection/parsing failed");
+            return console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
+          }
+        });
+      };
+      list = function(ids) {
+        return Instagram.subscriptions.list({
+          complete: function(data) {
+            console.log("\n" + title + " list\n" + indent + "connection/parsing succeeded");
+            try {
+              data.length.should.equal(2);
+              console.log("" + indent + "data met assertions");
+              return unsubscribe(ids);
+            } catch (e) {
+              return console.log("" + indent + "data failed to meet the assertion(s): " + e);
+            }
+          },
+          error: function(e, data, caller) {
+            console.log("\n" + title + " list\n" + indent + "connection/parsing failed");
+            return console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
+          }
+        });
+      };
+      subscribe_again = function(ids) {
+        return Instagram.subscriptions.subscribe({
+          object: 'tag',
+          object_id: 'green',
+          complete: function(data) {
+            console.log("\n" + title + " subscribe#green\n" + indent + "connection/parsing succeeded");
+            try {
+              data.should.have.property('id');
+              data.id.should.be.above(0);
+              data.should.have.property('type', 'subscription');
+              console.log("" + indent + "data met assertions");
+              ids[ids.length] = data['id'];
+              return list(ids);
+            } catch (e) {
+              return console.log("" + indent + "data failed to meet the assertion(s): " + e);
+            }
+          },
+          error: function(e, data, caller) {
+            console.log("\n" + title + " subscribe#green\n" + indent + "connection/parsing failed");
+            return console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
+          }
+        });
+      };
+      return Instagram.subscriptions.subscribe({
+        object: 'tag',
+        object_id: 'red',
+        complete: function(data) {
+          console.log("\n" + title + " subscribe#red\n" + indent + "connection/parsing succeeded");
+          try {
+            data.should.have.property('id');
+            data.id.should.be.above(0);
+            data.should.have.property('type', 'subscription');
+            console.log("" + indent + "data met assertions");
+            return subscribe_again([data['id']]);
+          } catch (e) {
+            return console.log("" + indent + "data failed to meet the assertion(s): " + e);
+          }
+        },
+        error: function(e, data, caller) {
+          console.log("\n" + title + " subscribe#red\n" + indent + "connection/parsing failed");
+          return console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
         }
       });
     }
   };
   /*
-  Tests Reporting
+  App Termination
   */
-  console.log("\n   Instagram API Node.js Lib Tests\n");
-  for (k in module.exports) {
+  for (i in module.exports) {
     to_do += 1;
-    console.log("   " + k);
   }
   iterations = 0;
   waiting = setInterval(function(){if(completed==to_do||iterations>to_do){clearInterval(waiting);app.close();}else{iterations+=1;}}, 1000);
