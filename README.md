@@ -48,8 +48,9 @@ In addition, the parameters object may include two functions, one of which will 
 
     {
       name: 'blue',
-      complete: function(data){
+      complete: function(data, pagination){
           // data is a javascript object/array/null matching that shipped Instagram
+          // when available (mostly /recent), pagination is a javascript object with the pagination information
         },
       error: function(errorMessage, errorObject, caller){
           // errorMessage is the raised error message
