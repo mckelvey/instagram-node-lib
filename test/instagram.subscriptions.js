@@ -54,12 +54,14 @@
               console.log("" + indent + "data met assertions");
               return completed += 1;
             } catch (e) {
-              return console.log("" + indent + "data failed to meet the assertion(s): " + e);
+              console.log("" + indent + "data failed to meet the assertion(s): " + e);
+              throw e;
             }
           },
           error: function(e, data, caller) {
             console.log("\n" + title + " unsubscribe\n" + indent + "connection/parsing failed");
-            return console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
+            console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
+            throw e;
           }
         });
       };
@@ -72,12 +74,14 @@
               console.log("" + indent + "data met assertions");
               return unsubscribe(subscription_id);
             } catch (e) {
-              return console.log("" + indent + "data failed to meet the assertion(s): " + e);
+              console.log("" + indent + "data failed to meet the assertion(s): " + e);
+              throw e;
             }
           },
           error: function(e, data, caller) {
             console.log("\n" + title + " list\n" + indent + "connection/parsing failed");
-            return console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
+            console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
+            throw e;
           }
         });
       };
@@ -93,12 +97,14 @@
             console.log("" + indent + "data met assertions");
             return list(data['id']);
           } catch (e) {
-            return console.log("" + indent + "data failed to meet the assertion(s): " + e);
+            console.log("" + indent + "data failed to meet the assertion(s): " + e);
+            throw e;
           }
         },
         error: function(e, data, caller) {
           console.log("\n" + title + " subscribe#blue\n" + indent + "connection/parsing failed");
-          return console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
+          console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
+          throw e;
         }
       });
     },
@@ -115,12 +121,14 @@
               console.log("" + indent + "data met assertions");
               return completed += 1;
             } catch (e) {
-              return console.log("" + indent + "data failed to meet the assertion(s): " + e);
+              console.log("" + indent + "data failed to meet the assertion(s): " + e);
+              throw e;
             }
           },
           error: function(e, data, caller) {
             console.log("\n" + title + " unsubscribe\n" + indent + "connection/parsing failed");
-            return console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
+            console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
+            throw e;
           }
         });
       };
@@ -133,12 +141,14 @@
               console.log("" + indent + "data met assertions");
               return unsubscribe(subscription_id);
             } catch (e) {
-              return console.log("" + indent + "data failed to meet the assertion(s): " + e);
+              console.log("" + indent + "data failed to meet the assertion(s): " + e);
+              throw e;
             }
           },
           error: function(e, data, caller) {
             console.log("\n" + title + " list\n" + indent + "connection/parsing failed");
-            return console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
+            console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
+            throw e;
           }
         });
       };
@@ -154,12 +164,14 @@
             console.log("" + indent + "data met assertions");
             return list(data['id']);
           } catch (e) {
-            return console.log("" + indent + "data failed to meet the assertion(s): " + e);
+            console.log("" + indent + "data failed to meet the assertion(s): " + e);
+            throw e;
           }
         },
         error: function(e, data, caller) {
           console.log("\n" + title + " subscribe#1257285\n" + indent + "connection/parsing failed");
-          return console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
+          console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
+          throw e;
         }
       });
     },
@@ -176,12 +188,14 @@
               console.log("" + indent + "data met assertions");
               return completed += 1;
             } catch (e) {
-              return console.log("" + indent + "data failed to meet the assertion(s): " + e);
+              console.log("" + indent + "data failed to meet the assertion(s): " + e);
+              throw e;
             }
           },
           error: function(e, data, caller) {
             console.log("\n" + title + " unsubscribe\n" + indent + "connection/parsing failed");
-            return console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
+            console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
+            throw e;
           }
         });
       };
@@ -194,12 +208,14 @@
               console.log("" + indent + "data met assertions");
               return unsubscribe(subscription_id);
             } catch (e) {
-              return console.log("" + indent + "data failed to meet the assertion(s): " + e);
+              console.log("" + indent + "data failed to meet the assertion(s): " + e);
+              throw e;
             }
           },
           error: function(e, data, caller) {
             console.log("\n" + title + " list\n" + indent + "connection/parsing failed");
-            return console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
+            console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
+            throw e;
           }
         });
       };
@@ -217,12 +233,14 @@
             console.log("" + indent + "data met assertions");
             return list(data['id']);
           } catch (e) {
-            return console.log("" + indent + "data failed to meet the assertion(s): " + e);
+            console.log("" + indent + "data failed to meet the assertion(s): " + e);
+            throw e;
           }
         },
         error: function(e, data, caller) {
           console.log("\n" + title + " subscribe#48.858844300000001/2.2943506\n" + indent + "connection/parsing failed");
-          return console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
+          console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
+          throw e;
         }
       });
     },
@@ -238,12 +256,14 @@
               console.log("" + indent + "data met assertions");
               return completed += 1;
             } catch (e) {
-              return console.log("" + indent + "data failed to meet the assertion(s): " + e);
+              console.log("" + indent + "data failed to meet the assertion(s): " + e);
+              throw e;
             }
           },
           error: function(e, data, caller) {
             console.log("\n" + title + " unsubscribe_all\n" + indent + "connection/parsing failed");
-            return console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
+            console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
+            throw e;
           }
         });
       };
@@ -256,12 +276,14 @@
               console.log("" + indent + "data met assertions");
               return unsubscribe(ids);
             } catch (e) {
-              return console.log("" + indent + "data failed to meet the assertion(s): " + e);
+              console.log("" + indent + "data failed to meet the assertion(s): " + e);
+              throw e;
             }
           },
           error: function(e, data, caller) {
             console.log("\n" + title + " list\n" + indent + "connection/parsing failed");
-            return console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
+            console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
+            throw e;
           }
         });
       };
@@ -279,12 +301,14 @@
               ids[ids.length] = data['id'];
               return list(ids);
             } catch (e) {
-              return console.log("" + indent + "data failed to meet the assertion(s): " + e);
+              console.log("" + indent + "data failed to meet the assertion(s): " + e);
+              throw e;
             }
           },
           error: function(e, data, caller) {
             console.log("\n" + title + " subscribe#green\n" + indent + "connection/parsing failed");
-            return console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
+            console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
+            throw e;
           }
         });
       };
@@ -300,12 +324,14 @@
             console.log("" + indent + "data met assertions");
             return subscribe_again([data['id']]);
           } catch (e) {
-            return console.log("" + indent + "data failed to meet the assertion(s): " + e);
+            console.log("" + indent + "data failed to meet the assertion(s): " + e);
+            throw e;
           }
         },
         error: function(e, data, caller) {
           console.log("\n" + title + " subscribe#red\n" + indent + "connection/parsing failed");
-          return console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
+          console.log("" + indent + "error: " + e + "\n" + indent + "data: " + data + "\n" + indent + "caller: " + caller);
+          throw e;
         }
       });
     }

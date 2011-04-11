@@ -35,4 +35,4 @@ class InstagramMedia
     params['object'] = 'geography'
     @parent.subscriptions._unsubscribe params
 
-exports.module = InstagramMedia
+module.exports = InstagramMedia

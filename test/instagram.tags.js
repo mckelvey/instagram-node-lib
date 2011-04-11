@@ -19,9 +19,12 @@
     'tags#recent for blue': function() {
       return test_helper('tags#recent for blue', Instagram, 'tags', 'recent', {
         name: 'blue'
-      }, function(data) {
+      }, function(data, pagination) {
         data.length.should.equal(20);
-        return data[0].should.have.property('id');
+        data[0].should.have.property('id');
+        pagination.should.have.property('next_url');
+        pagination.should.have.property('next_max_id');
+        return pagination.should.have.property('next_min_id');
       });
     },
     'tags#search for blue': function() {

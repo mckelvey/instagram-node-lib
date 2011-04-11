@@ -28,4 +28,4 @@ class InstagramTags
     params['object'] = 'tag'
     @parent.subscriptions._unsubscribe params
 
-exports.module = InstagramTags
+module.exports = InstagramTags

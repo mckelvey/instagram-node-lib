@@ -19,9 +19,9 @@ class InstagramAPI
         'Accept': 'application/json'
         'Content-Length': 0
       }
-    for module in ['media', 'tags', 'users', 'locations', 'subscriptions']
+    for module in ['media', 'tags', 'users', 'locations', 'geographies', 'subscriptions']
       moduleClass = require "./class.instagram.#{module}"
-      @[module] = new moduleClass.module @
+      @[module] = new moduleClass @
 
   ###
   Generic Response Methods
@@ -34,9 +34,10 @@ class InstagramAPI
     console.log(message)
     message
 
-  _complete: (data) ->
+  _complete: (data, pagination) ->
     for i of data
       console.log data[i].id
+    console.log pagination
 
   ###
   Shared Data Manipulation Methods
@@ -100,10 +101,13 @@ class InstagramAPI
       response.on 'end', ->
         try
           parsedResponse = JSON.parse data
+          if parsedResponse? and parsedResponse['meta']? and parsedResponse['meta']['code'] isnt 200
+            error parsedResponse['meta']['error_type'], parsedResponse['meta']['error_message'], "_request"
+          else
+            pagination = if typeof parsedResponse['pagination'] is 'undefined' then {} else parsedResponse['pagination']
+            complete parsedResponse['data'], pagination
         catch e
           error e, data, '_request'
-        error parsedResponse['meta']['error_type'], parsedResponse['meta']['error_message'], "_request" if parsedResponse? and parsedResponse['meta']? and parsedResponse['meta']['code'] isnt 200
-        complete parsedResponse['data']
     if post_data?
       request.write post_data
     request.end()

@@ -28,4 +28,4 @@ class InstagramLocations
     params['object'] = 'location'
     @parent.subscriptions._unsubscribe params
 
-exports.module = InstagramLocations
+module.exports = InstagramLocations

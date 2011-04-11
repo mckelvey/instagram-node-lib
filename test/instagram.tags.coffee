@@ -16,9 +16,12 @@ module.exports =
       data.should.have.property 'name', 'blue'
       data.media_count.should.be.above 0
   'tags#recent for blue': ->
-    test_helper 'tags#recent for blue', Instagram, 'tags', 'recent', { name: 'blue' }, (data) ->
+    test_helper 'tags#recent for blue', Instagram, 'tags', 'recent', { name: 'blue' }, (data, pagination) ->
       data.length.should.equal 20
       data[0].should.have.property 'id'
+      pagination.should.have.property 'next_url'
+      pagination.should.have.property 'next_max_id'
+      pagination.should.have.property 'next_min_id'
   'tags#search for blue': ->
     test_helper 'tags#search for blue', Instagram, 'tags', 'search', { q: 'blue' }, (data) ->
       data.length.should.equal 50

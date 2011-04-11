@@ -12,4 +12,4 @@ class InstagramUsers
     params['path'] = "/#{@parent._api_version}/users/search?#{@parent._to_querystring(params)}"
     @parent._request params
 
-exports.module = InstagramUsers
+module.exports = InstagramUsers

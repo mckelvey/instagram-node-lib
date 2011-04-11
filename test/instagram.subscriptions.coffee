@@ -62,9 +62,11 @@ module.exports =
             completed += 1
           catch e
             console.log "#{indent}data failed to meet the assertion(s): #{e}"
+            throw e
         error: (e, data, caller) ->
           console.log "\n#{title} unsubscribe\n#{indent}connection/parsing failed"
           console.log "#{indent}error: #{e}\n#{indent}data: #{data}\n#{indent}caller: #{caller}"
+          throw e
       }
     list = (subscription_id) ->
       Instagram.subscriptions.list {
@@ -76,9 +78,11 @@ module.exports =
             unsubscribe subscription_id
           catch e
             console.log "#{indent}data failed to meet the assertion(s): #{e}"
+            throw e
         error: (e, data, caller) ->
           console.log "\n#{title} list\n#{indent}connection/parsing failed"
           console.log "#{indent}error: #{e}\n#{indent}data: #{data}\n#{indent}caller: #{caller}"
+          throw e
       }
     Instagram.tags.subscribe {
       object_id: 'blue'
@@ -93,9 +97,11 @@ module.exports =
           list data['id']
         catch e
           console.log "#{indent}data failed to meet the assertion(s): #{e}"
+          throw e
       error: (e, data, caller) ->
         console.log "\n#{title} subscribe#blue\n#{indent}connection/parsing failed"
         console.log "#{indent}error: #{e}\n#{indent}data: #{data}\n#{indent}caller: #{caller}"
+        throw e
     }
   'locations#subscriptions': ->
     title = "locations#subscriptions"
@@ -110,9 +116,11 @@ module.exports =
             completed += 1
           catch e
             console.log "#{indent}data failed to meet the assertion(s): #{e}"
+            throw e
         error: (e, data, caller) ->
           console.log "\n#{title} unsubscribe\n#{indent}connection/parsing failed"
           console.log "#{indent}error: #{e}\n#{indent}data: #{data}\n#{indent}caller: #{caller}"
+          throw e
       }
     list = (subscription_id) ->
       Instagram.subscriptions.list {
@@ -124,9 +132,11 @@ module.exports =
             unsubscribe subscription_id
           catch e
             console.log "#{indent}data failed to meet the assertion(s): #{e}"
+            throw e
         error: (e, data, caller) ->
           console.log "\n#{title} list\n#{indent}connection/parsing failed"
           console.log "#{indent}error: #{e}\n#{indent}data: #{data}\n#{indent}caller: #{caller}"
+          throw e
       }
     Instagram.locations.subscribe {
       object_id: '1257285'
@@ -141,9 +151,11 @@ module.exports =
           list data['id']
         catch e
           console.log "#{indent}data failed to meet the assertion(s): #{e}"
+          throw e
       error: (e, data, caller) ->
         console.log "\n#{title} subscribe#1257285\n#{indent}connection/parsing failed"
         console.log "#{indent}error: #{e}\n#{indent}data: #{data}\n#{indent}caller: #{caller}"
+        throw e
     }
   'media#subscriptions': ->
     title = "media#subscriptions"
@@ -158,9 +170,11 @@ module.exports =
             completed += 1
           catch e
             console.log "#{indent}data failed to meet the assertion(s): #{e}"
+            throw e
         error: (e, data, caller) ->
           console.log "\n#{title} unsubscribe\n#{indent}connection/parsing failed"
           console.log "#{indent}error: #{e}\n#{indent}data: #{data}\n#{indent}caller: #{caller}"
+          throw e
       }
     list = (subscription_id) ->
       Instagram.subscriptions.list {
@@ -172,9 +186,11 @@ module.exports =
             unsubscribe subscription_id
           catch e
             console.log "#{indent}data failed to meet the assertion(s): #{e}"
+            throw e
         error: (e, data, caller) ->
           console.log "\n#{title} list\n#{indent}connection/parsing failed"
           console.log "#{indent}error: #{e}\n#{indent}data: #{data}\n#{indent}caller: #{caller}"
+          throw e
       }
     Instagram.media.subscribe {
       lat: 48.858844300000001
@@ -191,9 +207,11 @@ module.exports =
           list data['id']
         catch e
           console.log "#{indent}data failed to meet the assertion(s): #{e}"
+          throw e
       error: (e, data, caller) ->
         console.log "\n#{title} subscribe#48.858844300000001/2.2943506\n#{indent}connection/parsing failed"
         console.log "#{indent}error: #{e}\n#{indent}data: #{data}\n#{indent}caller: #{caller}"
+        throw e
     }
   'subscriptions': ->
     title = "subscriptions"
@@ -207,9 +225,11 @@ module.exports =
             completed += 1
           catch e
             console.log "#{indent}data failed to meet the assertion(s): #{e}"
+            throw e
         error: (e, data, caller) ->
           console.log "\n#{title} unsubscribe_all\n#{indent}connection/parsing failed"
           console.log "#{indent}error: #{e}\n#{indent}data: #{data}\n#{indent}caller: #{caller}"
+          throw e
       }
     list = (ids) ->
       Instagram.subscriptions.list {
@@ -221,9 +241,11 @@ module.exports =
             unsubscribe ids
           catch e
             console.log "#{indent}data failed to meet the assertion(s): #{e}"
+            throw e
         error: (e, data, caller) ->
           console.log "\n#{title} list\n#{indent}connection/parsing failed"
           console.log "#{indent}error: #{e}\n#{indent}data: #{data}\n#{indent}caller: #{caller}"
+          throw e
       }
     subscribe_again = (ids) ->
       Instagram.subscriptions.subscribe {
@@ -240,11 +262,12 @@ module.exports =
             list ids
           catch e
             console.log "#{indent}data failed to meet the assertion(s): #{e}"
+            throw e
         error: (e, data, caller) ->
           console.log "\n#{title} subscribe#green\n#{indent}connection/parsing failed"
           console.log "#{indent}error: #{e}\n#{indent}data: #{data}\n#{indent}caller: #{caller}"
+          throw e
       }
-      
     Instagram.subscriptions.subscribe {
       object: 'tag'
       object_id: 'red'
@@ -258,9 +281,11 @@ module.exports =
           subscribe_again [data['id']]
         catch e
           console.log "#{indent}data failed to meet the assertion(s): #{e}"
+          throw e
       error: (e, data, caller) ->
         console.log "\n#{title} subscribe#red\n#{indent}connection/parsing failed"
         console.log "#{indent}error: #{e}\n#{indent}data: #{data}\n#{indent}caller: #{caller}"
+        throw e
     }
 
 ###

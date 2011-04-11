@@ -20,9 +20,12 @@
     'locations#recent for id#1': function() {
       return test_helper('locations#recent for id#1', Instagram, 'locations', 'recent', {
         location_id: 1
-      }, function(data) {
+      }, function(data, pagination) {
         data.length.should.be.above(0);
-        return data[0].should.have.property('id');
+        data[0].should.have.property('id');
+        pagination.should.have.property('next_url');
+        pagination.should.have.property('next_max_id');
+        return pagination.should.have.property('next_min_id');
       });
     },
     'locations#search for 48.858844300000001/2.2943506': function() {

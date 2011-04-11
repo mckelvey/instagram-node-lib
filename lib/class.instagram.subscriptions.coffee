@@ -80,4 +80,4 @@ class InstagramSubscriptions
     params['object'] = 'all' if params['object'] is undefined or not params['object']?
     @_unsubscribe params
 
-exports.module = InstagramSubscriptions
+module.exports = InstagramSubscriptions
