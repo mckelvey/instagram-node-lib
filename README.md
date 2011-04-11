@@ -23,7 +23,7 @@ When successful, the data logged in the console would be a javascript object lik
 
 ## Installation
 
-    $ npm install instagram
+    $ npm install instagram-node-lib
 
 ## Setup
 
