@@ -36,11 +36,11 @@ To use the library, you'll need to require it and at minimum, set your CLIENT_ID
 
 Optionally, if you intend to use the real-time API to manage subscriptions, then you can also set a global callback url. (You may also provide/override the callback url when subscribing.)
 
-    Instagram.set('callback_url', 'http://your.callback/path');
+    Instagram.set('callback_url', 'http://your.callback/url');
 
 ## Available Methods
 
-_The methods currently available are limited to those available for non-user-specific interaction (i.e. anything that does not require authentication and an access_token). Look for those in future releases._
+_The methods currently available are limited to those available for non-user-specific interaction (i.e. anything that does not require an access_token but works with client_id and client_secret). Look for those in future releases._
 
 All of the methods below follow a similar pattern. Each accepts a single javascript object with the needed parameters to complete the API call. Required parameters are shown below; refer to [the API docs](http://instagram.com/developer/endpoints/) for the optional parameters. All parameters are passed through to the request, so use the exact terms that the API docs provide.
 
