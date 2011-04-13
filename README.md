@@ -279,7 +279,7 @@ Search for matching users by name (q).
 
 In addition to the above subscription methods within tags, locations and media, you can also interact with any subscription directly with the methods below. As with the others, it will be helpful to review the [Instagram API docs](http://instagram.com/developer/realtime/) for additional information.
 
-Be sure to include a GET route/method for the callback handshake at the `callback_url` that can handle the setup. This library includes a handshake method (based on Express), to which you can provide the request, the response and a complete method that will act upon the `verify_token` should you provide it.
+Be sure to include a GET route/method for the callback handshake at the `callback_url` that can handle the setup. This library includes a handshake method (example below based on Express), to which you can provide the request, the response and a complete method that will act upon the `verify_token` should you have provided it in the initial request.
 
     app.get('/subscribe', function(request, response){
       Instagram.subscriptions.handshake(request, response); 
