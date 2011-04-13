@@ -6,3 +6,11 @@
 2. Create object.subscriptions list method that lists only subscriptions with a matching object.
 
 3. Added /v1/geographies to the lib but tests fail; no idea how the ids work.
+
+4. Add tests for count param for:
+   /tags/#/recent/media (150)
+   /tags/search (100)
+   /users/search (100)
+   /locations/#/recent/media (150)
+   /locations/search (100)
+   /media/search (100)

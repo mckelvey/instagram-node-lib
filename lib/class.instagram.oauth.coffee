@@ -8,6 +8,7 @@ class InstagramOAuth
   ask_for_authorization: (params) ->
     params['client_id'] = @parent._config.client_id
     params['redirect_uri'] = if params['redirect_uri'] is undefined or params['redirect_uri'] is null then @parent._config.redirect_uri else params['redirect_uri']
+    params['response_type'] = 'code'
     params['path'] = "/oauth/authorize/?#{@parent._to_querystring(params)}"
     @parent._request params
 
@@ -18,6 +19,11 @@ class InstagramOAuth
     else if parsedRequest['query']['code']?
       response.writeHead 200, { 'Content-Length': 0, 'Content-Type': 'text/plain' }
       response.end()
+      params =
+        redirect_uri: "#{parsedRequest['protocol']}//#{parsedRequest['host']}#{parsedRequest['pathname']}"
+        code: parsedRequest['query']['code']
+        complete: complete
+      ask_for_access_token params
 
   ask_for_access_token: (params) ->
     params['method'] = "POST"
