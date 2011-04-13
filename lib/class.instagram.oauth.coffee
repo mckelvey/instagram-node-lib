@@ -11,6 +11,14 @@ class InstagramOAuth
     params['path'] = "/oauth/authorize/?#{@parent._to_querystring(params)}"
     @parent._request params
 
+  handshake: (request, response, complete) ->
+    parsedRequest = url.parse(request.url, true)
+    if parsedRequest['query']['error']?
+      @parent._error "#{parsedRequest['query']['error']}: #{parsedRequest['query']['error_reason']}: #{parsedRequest['query']['error_description']}", parsedRequest['query'], 'handshake'
+    else if parsedRequest['query']['code']?
+      response.writeHead 200, { 'Content-Length': 0, 'Content-Type': 'text/plain' }
+      response.end()
+
   ask_for_access_token: (params) ->
     params['method'] = "POST"
     params['post_data'] =
@@ -21,13 +29,5 @@ class InstagramOAuth
       code: params['code']
     params['path'] = "/oauth/access_token"
     @parent._request params
-
-  handshake: (request, response, complete) ->
-    parsedRequest = url.parse(request.url, true)
-    if parsedRequest['query']['error']?
-      @parent._error "#{parsedRequest['query']['error']}: #{parsedRequest['query']['error_reason']}: #{parsedRequest['query']['error_description']}", parsedRequest['query'], 'handshake'
-    else if parsedRequest['query']['code']?
-      response.writeHead 200, { 'Content-Length': 0, 'Content-Type': 'text/plain' }
-      response.end()
 
 module.exports = InstagramOAuth
