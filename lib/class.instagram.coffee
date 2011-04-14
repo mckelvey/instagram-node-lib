@@ -8,7 +8,8 @@ class InstagramAPI
     @_config =
       client_id: if process.env['CLIENT_ID']? then process.env['CLIENT_ID'] else 'CLIENT-ID'
       client_secret: if process.env['CLIENT_SECRET']? then process.env['CLIENT_SECRET'] else 'CLIENT-SECRET'
-      callback_url: if process.env['CALLBACK_URL']? then process.env['CALLBACK_URL'] else ''
+      callback_url: if process.env['CALLBACK_URL']? then process.env['CALLBACK_URL'] else 'CALLBACK-URL'
+      redirect_uri: if process.env['REDIRECT_URI']? then process.env['REDIRECT_URI'] else 'REDIRECT_URI'
     @_options =
       host: 'api.instagram.com'
       port: null
@@ -19,7 +20,7 @@ class InstagramAPI
         'Accept': 'application/json'
         'Content-Length': 0
       }
-    for module in ['media', 'tags', 'users', 'locations', 'geographies', 'subscriptions']
+    for module in ['media', 'tags', 'users', 'locations', 'geographies', 'subscriptions', 'oauth']
       moduleClass = require "./class.instagram.#{module}"
       @[module] = new moduleClass @
 
@@ -36,8 +37,8 @@ class InstagramAPI
 
   _complete: (data, pagination) ->
     for i of data
-      console.log data[i].id
-    console.log pagination
+      console.log data[i]
+    console.log pagination if pagination?
 
   ###
   Shared Data Manipulation Methods
@@ -103,6 +104,8 @@ class InstagramAPI
           parsedResponse = JSON.parse data
           if parsedResponse? and parsedResponse['meta']? and parsedResponse['meta']['code'] isnt 200
             error parsedResponse['meta']['error_type'], parsedResponse['meta']['error_message'], "_request"
+          else if parsedResponse['access_token']?
+            complete parsedResponse
           else
             pagination = if typeof parsedResponse['pagination'] is 'undefined' then {} else parsedResponse['pagination']
             complete parsedResponse['data'], pagination

@@ -36,7 +36,11 @@ To use the library, you'll need to require it and at minimum, set your CLIENT_ID
 
 Optionally, if you intend to use the real-time API to manage subscriptions, then you can also set a global callback url. (You may also provide/override the callback url when subscribing.)
 
-    Instagram.set('callback_url', 'http://your.callback/url');
+    Instagram.set('callback_url', 'CALLBACK-URL');
+
+If you intend to use user-specific methods (e.g. relationships), then you must also set a global redirect_uri (matching that in your [app settings in the API](http://instagram.com/developer/manage/)).
+
+    Instagram.set('redirect_uri', 'YOUR-REDIRECT-URI');
 
 ## Available Methods
 
@@ -316,6 +320,36 @@ Unsubscribe from all subscriptions of all kinds.
 
     Instagram.unsubscribe_all();
       ->  null // null is success, an error is failure
+
+## OAuth
+
+In order to perform specific methods upon user data, you will need to have authorization from them through [Instagram OAuth](http://instagram.com/developer/auth/). Several methods are provided so that you can request authorization from users. You will need to specify your redirect_uri from your [application setup at Instagram](http://instagram.com/developer/manage/).
+
+    Instagram.set('redirect_uri', 'YOUR-REDIRECT-URI');
+
+#### Authorization Url
+
+To obtain a user url for the link to Instagram, use the authorization_url method. You can include the optional parameters as needed, but be sure to use spaces instead of pluses (as they will be encoded to pluses).
+
+    url = Instagram.oauth.authorization_url({
+      scope: 'comments likes' // use a space when specifying a scope; it will be encoded into a space
+      display: 'touch'
+    });
+
+#### Ask for an Access Token
+
+The example below uses Express to specify a route to respond to the user's return from Instagram. It will pass the access_token and user object returned to a provided complete function.
+
+    app.get('/oauth', function(request, response){
+      Instagram.oauth.ask_for_access_token({
+        request: request,
+        response: response,
+        complete: function(params){
+          // params['access_token']
+          // params['user']
+        }
+      });
+    });
 
 ## Developers
 

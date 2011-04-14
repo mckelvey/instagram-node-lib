@@ -7,7 +7,11 @@
 
 3. Added /v1/geographies to the lib but tests fail; no idea how the ids work.
 
-4. Add tests for count param for:
+4. Add OAuth
+
+5. Allow for a better response for OAuth.
+
+6. Add tests for count param for:
    /tags/#/recent/media (150)
    /tags/search (100)
    /users/search (100)
