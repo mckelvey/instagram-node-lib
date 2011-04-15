@@ -21,8 +21,7 @@ module.exports =
       data.length.should.be.above 0
       data[0].should.have.property 'id'
       pagination.should.have.property 'next_url'
-      pagination.should.have.property 'next_max_id'
-      pagination.should.have.property 'next_min_id'
+      pagination.should.have.property 'next_max_id' or pagination.should.have.property 'next_min_id'
   'locations#search for 48.858844300000001/2.2943506': ->
     test_helper 'locations#search for 48.858844300000001/2.2943506', Instagram, 'locations', 'search', { lat: 48.858844300000001, lng: 2.2943506 }, (data) ->
       data.length.should.be.above 0

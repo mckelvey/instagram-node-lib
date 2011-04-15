@@ -16,6 +16,22 @@
         return data.should.have.property('profile_picture');
       });
     },
+    'users#self for mckelvey': function() {
+      return test_helper('users#self for mckelvey', Instagram, 'users', 'self', {}, function(data) {
+        data.length.should.be.above(0);
+        data[0].should.have.property('id');
+        return data[0]['user'].should.have.property('username', 'mckelvey');
+      });
+    },
+    'users#recent for mckelvey': function() {
+      return test_helper('users#recent for mckelvey', Instagram, 'users', 'recent', {
+        user_id: 291024
+      }, function(data) {
+        data.length.should.be.above(0);
+        data[0].should.have.property('id');
+        return data[0]['user'].should.have.property('username', 'mckelvey');
+      });
+    },
     'users#search for mckelvey': function() {
       return test_helper('users#search for mckelvey', Instagram, 'users', 'search', {
         q: 'mckelvey'

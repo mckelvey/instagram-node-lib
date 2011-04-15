@@ -4,24 +4,28 @@ class InstagramMedia
     @parent = parent
 
   popular: (params) ->
-    params['path'] = "/#{@parent._api_version}/media/popular?client_id=#{@parent._config.client_id}"
+    credentials = @parent._credentials {}
+    params['path'] = "/#{@parent._api_version}/media/popular?#{@parent._to_querystring(credentials)}"
     @parent._request params
 
   info: (params) ->
-    params['path'] = "/#{@parent._api_version}/media/#{params['media_id']}?client_id=#{@parent._config.client_id}"
+    credentials = @parent._credentials {}
+    params['path'] = "/#{@parent._api_version}/media/#{params['media_id']}?#{@parent._to_querystring(credentials)}"
     @parent._request params
 
   search: (params) ->
-    params['client_id'] = @parent._config.client_id
+    params = @parent._credentials params
     params['path'] = "/#{@parent._api_version}/media/search?#{@parent._to_querystring(params)}"
     @parent._request params
 
   likes: (params) ->
-    params['path'] = "/#{@parent._api_version}/media/#{params['media_id']}/likes?client_id=#{@parent._config.client_id}"
+    credentials = @parent._credentials {}
+    params['path'] = "/#{@parent._api_version}/media/#{params['media_id']}/likes?#{@parent._to_querystring(credentials)}"
     @parent._request params
 
   comments: (params) ->
-    params['path'] = "/#{@parent._api_version}/media/#{params['media_id']}/comments?client_id=#{@parent._config.client_id}"
+    credentials = @parent._credentials {}
+    params['path'] = "/#{@parent._api_version}/media/#{params['media_id']}/comments?#{@parent._to_querystring(credentials)}"
     @parent._request params
 
   subscribe: (params) ->

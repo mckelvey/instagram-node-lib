@@ -15,6 +15,16 @@ module.exports =
     test_helper 'users#info for id#291024', Instagram, 'users', 'info', { user_id: 291024 }, (data) ->
       data.should.have.property 'id', '291024'
       data.should.have.property 'profile_picture'
+  'users#self for mckelvey': ->
+    test_helper 'users#self for mckelvey', Instagram, 'users', 'self', {}, (data) ->
+      data.length.should.be.above 0
+      data[0].should.have.property 'id'
+      data[0]['user'].should.have.property 'username', 'mckelvey'
+  'users#recent for mckelvey': ->
+    test_helper 'users#recent for mckelvey', Instagram, 'users', 'recent', { user_id: 291024 }, (data) ->
+      data.length.should.be.above 0
+      data[0].should.have.property 'id'
+      data[0]['user'].should.have.property 'username', 'mckelvey'
   'users#search for mckelvey': ->
     test_helper 'users#search for mckelvey', Instagram, 'users', 'search', { q: 'mckelvey' }, (data) ->
       data.length.should.be.above 0

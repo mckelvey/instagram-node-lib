@@ -10,6 +10,7 @@ class InstagramAPI
       client_secret: if process.env['CLIENT_SECRET']? then process.env['CLIENT_SECRET'] else 'CLIENT-SECRET'
       callback_url: if process.env['CALLBACK_URL']? then process.env['CALLBACK_URL'] else 'CALLBACK-URL'
       redirect_uri: if process.env['REDIRECT_URI']? then process.env['REDIRECT_URI'] else 'REDIRECT_URI'
+      access_token: if process.env['ACCESS_TOKEN']? then process.env['ACCESS_TOKEN'] else null
     @_options =
       host: 'api.instagram.com'
       port: null
@@ -20,7 +21,7 @@ class InstagramAPI
         'Accept': 'application/json'
         'Content-Length': 0
       }
-    for module in ['media', 'tags', 'users', 'locations', 'geographies', 'subscriptions', 'oauth']
+    for module in ['media', 'likes', 'comments', 'tags', 'users', 'locations', 'geographies', 'subscriptions', 'oauth']
       moduleClass = require "./class.instagram.#{module}"
       @[module] = new moduleClass @
 
@@ -82,6 +83,17 @@ class InstagramAPI
   ###
   Shared Request Methods
   ###
+
+  _credentials: (params, require = null) ->
+    if require? and params[require]? or params['access_token']? or params['client_id']?
+      return params
+    if require isnt null and @_config[require]?
+      params[require] = @_config[require]
+    else if @_config['access_token']?
+      params['access_token'] = @_config['access_token']
+    else if @_config['client_id']?
+      params['client_id'] = @_config['client_id']
+    return params
 
   _request: (params) ->
     options = @_clone(@_options)
