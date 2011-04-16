@@ -4,16 +4,17 @@ class InstagramTags
     @parent = parent
 
   info: (params) ->
-    params['path'] = "/#{@parent._api_version}/tags/#{params['name']}?client_id=#{@parent._config.client_id}"
+    credentials = @parent._credentials {}
+    params['path'] = "/#{@parent._api_version}/tags/#{params['name']}?#{@parent._to_querystring(credentials)}"
     @parent._request params
 
   recent: (params) ->
-    params['client_id'] = @parent._config.client_id
+    params = @parent._credentials params
     params['path'] = "/#{@parent._api_version}/tags/#{params['name']}/media/recent?#{@parent._to_querystring(params)}"
     @parent._request params
 
   search: (params) ->
-    params['client_id'] = @parent._config.client_id
+    params = @parent._credentials params
     params['path'] = "/#{@parent._api_version}/tags/search?#{@parent._to_querystring(params)}"
     @parent._request params
 

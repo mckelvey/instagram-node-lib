@@ -36,11 +36,13 @@ To use the library, you'll need to require it and at minimum, set your CLIENT_ID
 
 Optionally, if you intend to use the real-time API to manage subscriptions, then you can also set a global callback url. (You may also provide/override the callback url when subscribing.)
 
-    Instagram.set('callback_url', 'http://your.callback/url');
+    Instagram.set('callback_url', 'CALLBACK-URL');
+
+If you intend to use user-specific methods (e.g. relationships), then you must also set a global redirect_uri (matching that in your [app settings in the API](http://instagram.com/developer/manage/)).
+
+    Instagram.set('redirect_uri', 'YOUR-REDIRECT-URI');
 
 ## Available Methods
-
-_The methods currently available are limited to those available for non-user-specific interaction (i.e. anything that does not require an access_token but works with client_id and client_secret). Look for those in future releases._
 
 All of the methods below follow a similar pattern. Each accepts a single javascript object with the needed parameters to complete the API call. Required parameters are shown below; refer to [the API docs](http://instagram.com/developer/endpoints/) for the optional parameters. All parameters are passed through to the request, so use the exact terms that the API docs provide.
 
@@ -104,6 +106,14 @@ Akin to an info request, this method only returns an array of likers for the med
               id: '#',
               full_name: 'Mike Krieger' } ]
 
+Using an `access_token`, you can have the token user like or unlike a media item.
+
+    Instagram.media.like({ media_id: 3 });
+      ->  null // null is success, an error is failure
+
+    Instagram.media.unlike({ media_id: 3 });
+      ->  null // null is success, an error is failure
+
 #### Comments
 
 Akin to an info request, this method only returns an array of comments on the media.
@@ -125,6 +135,21 @@ Akin to an info request, this method only returns an array of comments on the me
                  id: '#',
                  full_name: 'Kevin Systrom' },
               id: '3' } ]
+
+Using an `access_token`, you can have the token user comment upon or delete their comment from a media item.
+
+    Instagram.media.comment({ media_id: 3, text: 'Instagame was here.' });
+      ->  { created_time: '1302926497',
+            text: 'Instagame was here.',
+            from:
+              { username: 'instagame',
+                profile_picture: 'http://profile/path.jpg',
+                id: '#',
+                full_name: '' },
+            id: '67236858' }
+
+    Instagram.media.uncomment({ media_id: 3, comment_id: 67236858 });
+      ->  null // null is success, an error is failure
 
 #### Subscriptions
 
@@ -275,6 +300,82 @@ Search for matching users by name (q).
               id: '291024',
               full_name: 'David McKelvey' }, ... ]
 
+#### Self
+
+Get the user media feed for the `access_token` supplied. This method obviously then requires `access_token` rather than simply `client_id`; see the OAuth section on obtaining an `access_token`. You can either supply it here or set it within the library.
+
+    Instagram.users.self();
+      ->  [ { media object },
+            { media object },
+            { media object }, ... ]
+
+#### Recent
+
+Get the user media feed for a user by user_id. This method requires `access_token` rather than simply `client_id` in case the requested user media is protected and the requesting user is not authorized to view the media; see the OAuth section on obtaining an `access_token`. You can either supply it here or set it within the library.
+
+    Instagram.users.recent({ user_id: 291024 });
+      ->  [ { media object },
+            { media object },
+            { media object }, ... ]
+
+#### Relationships
+
+The following methods allow you to view and alter user-to-user relationships via an `access_token` (assuming the scope `relationships` has been authorized for the token). Do review the outgoing and incoming references in the [Instagram API Relationship Docs](http://instagram.com/developer/endpoints/relationships/) as they can be confusing since they act in relation to the `access_token` used. _I didn't have any users to fully test the request/approve/ignore against; let me know if you encounter difficulties._
+
+    Instagram.users.follows({ user_id: 291024 });
+      ->  [ { username: 'mckelvey',
+              profile_picture: 'http://profile/path.jpg',
+              id: '291024',
+              full_name: 'David McKelvey' }, ... ]
+
+    Instagram.users.followed_by({ user_id: 291024 });
+      ->  [ { username: 'instagame',
+              profile_picture: 'http://profile/path.jpg',
+              id: '1340677',
+              full_name: '' }, ... ]
+
+    Instagram.users.requested_by({ user_id: 291024 });
+      ->  [ { username: 'instagame',
+              profile_picture: 'http://profile/path.jpg',
+              id: '1340677',
+              full_name: '' }, ... ]
+
+    Instagram.users.relationship({ user_id: 291024 });
+      ->  { outgoing_status: 'follows', // access_token user follows user 291024
+            incoming_status: 'none' } // user 291024 has no relationship with the access_token user
+
+    Instagram.users.follow({ user_id: 291024 });
+      ->  { outgoing_status: 'follows' } // success: access_token user follows user 291024
+
+    Instagram.users.unfollow({ user_id: 291024 });
+      ->  { outgoing_status: 'none' } // success: access_token user no longer follows user 291024
+
+    Instagram.users.block({ user_id: 291024 });
+      ->  { incoming_status: 'blocked_by_you' } // success: access_token user has blocked user 291024
+
+    Instagram.users.unblock({ user_id: 291024 });
+      ->  { incoming_status: 'none' } // success: access_token user no longer blocks user 291024
+
+    Instagram.users.approve({ user_id: 291024 });
+      ->  { incoming_status: 'followed_by' } // success: access_token user has allowed user 291024 to follow
+
+    Instagram.users.ignore({ user_id: 291024 });
+      ->  { incoming_status: 'requested_by' } // success: access_token user has ignored user 291024's follow request
+
+#### Subscriptions
+
+User subscriptions are also available with the following methods. A `callback_url` is required when subscribing if not specified globally, and you may also provide a `verify_token` if you want to keep track of which subscription is coming back. Note that because Instagram user subscriptions are based on your API client's authenticated users, `unsubscribe` is equivalent to `unsubscribe_all`, so only `unsubscribe_all` is provided.
+
+    Instagram.users.subscribe();
+      ->  { object: 'user',
+            aspect: 'media',
+            callback_url: 'http://your.callback/path',
+            type: 'subscription',
+            id: '#' }
+
+    Instagram.users.unsubscribe_all();
+      ->  null // null is success, an error is failure
+
 ### Real-time Subscriptions
 
 In addition to the above subscription methods within tags, locations and media, you can also interact with any subscription directly with the methods below. As with the others, it will be helpful to review the [Instagram API docs](http://instagram.com/developer/realtime/) for additional information.
@@ -322,6 +423,37 @@ Unsubscribe from all subscriptions of all kinds.
 
     Instagram.unsubscribe_all();
       ->  null // null is success, an error is failure
+
+## OAuth
+
+In order to perform specific methods upon user data, you will need to have authorization from them through [Instagram OAuth](http://instagram.com/developer/auth/). Several methods are provided so that you can request authorization from users. You will need to specify your redirect_uri from your [application setup at Instagram](http://instagram.com/developer/manage/).
+
+    Instagram.set('redirect_uri', 'YOUR-REDIRECT-URI');
+
+#### Authorization Url
+
+To obtain a user url for the link to Instagram, use the authorization_url method. You can include the optional parameters as needed, but be sure to use spaces instead of pluses (as they will be encoded to pluses).
+
+    url = Instagram.oauth.authorization_url({
+      scope: 'comments likes' // use a space when specifying a scope; it will be encoded into a space
+      display: 'touch'
+    });
+
+#### Ask for an Access Token
+
+The example below uses Express to specify a route to respond to the user's return from Instagram. It will pass the access_token and user object returned to a provided complete function. It is recommended that you provide a `redirect` path for the return, but do realize the end-user may arrive at that page prior to the retrieval of the `access_token` due the event model.
+
+    app.get('/oauth', function(request, response){
+      Instagram.oauth.ask_for_access_token({
+        request: request,
+        response: response,
+        redirect: 'http://your.app/home',
+        complete: function(params){
+          // params['access_token']
+          // params['user']
+        }
+      });
+    });
 
 ## Developers
 

@@ -3,26 +3,70 @@ class InstagramMedia
   constructor: (parent) ->
     @parent = parent
 
+  ###
+  Basic Media
+  ###
+
   popular: (params) ->
-    params['path'] = "/#{@parent._api_version}/media/popular?client_id=#{@parent._config.client_id}"
+    credentials = @parent._credentials {}
+    params['path'] = "/#{@parent._api_version}/media/popular?#{@parent._to_querystring(credentials)}"
     @parent._request params
 
   info: (params) ->
-    params['path'] = "/#{@parent._api_version}/media/#{params['media_id']}?client_id=#{@parent._config.client_id}"
+    credentials = @parent._credentials {}
+    params['path'] = "/#{@parent._api_version}/media/#{params['media_id']}?#{@parent._to_querystring(credentials)}"
     @parent._request params
 
   search: (params) ->
-    params['client_id'] = @parent._config.client_id
+    params = @parent._credentials params
     params['path'] = "/#{@parent._api_version}/media/search?#{@parent._to_querystring(params)}"
     @parent._request params
 
+  ###
+  Likes
+  ###
+
   likes: (params) ->
-    params['path'] = "/#{@parent._api_version}/media/#{params['media_id']}/likes?client_id=#{@parent._config.client_id}"
+    credentials = @parent._credentials {}
+    params['path'] = "/#{@parent._api_version}/media/#{params['media_id']}/likes?#{@parent._to_querystring(credentials)}"
     @parent._request params
 
-  comments: (params) ->
-    params['path'] = "/#{@parent._api_version}/media/#{params['media_id']}/comments?client_id=#{@parent._config.client_id}"
+  like: (params) ->
+    params['post_data'] = @parent._credentials {}, 'access_token'
+    params['method'] = 'POST'
+    params['path'] = "/#{@parent._api_version}/media/#{params['media_id']}/likes"
     @parent._request params
+
+  unlike: (params) ->
+    params = @parent._credentials params, 'access_token'
+    params['method'] = 'DELETE'
+    params['path'] = "/#{@parent._api_version}/media/#{params['media_id']}/likes?#{@parent._to_querystring(params)}"
+    @parent._request params
+
+  ###
+  Comments
+  ###
+
+  comments: (params) ->
+    credentials = @parent._credentials {}
+    params['path'] = "/#{@parent._api_version}/media/#{params['media_id']}/comments?#{@parent._to_querystring(credentials)}"
+    @parent._request params
+
+  comment: (params) ->
+    params['post_data'] = @parent._credentials { text: params['text'] }, 'access_token'
+    params['method'] = 'POST'
+    params['path'] = "/#{@parent._api_version}/media/#{params['media_id']}/comments"
+    @parent._request params
+
+  uncomment: (params) ->
+    credentials = @parent._credentials {}, 'access_token'
+    params['method'] = 'DELETE'
+    params['path'] = "/#{@parent._api_version}/media/#{params['media_id']}/comments/#{params['comment_id']}?#{@parent._to_querystring(credentials)}"
+    @parent._request params
+
+  ###
+  Subscriptions
+  ###
 
   subscribe: (params) ->
     params['object'] = 'geography'
