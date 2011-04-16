@@ -1,7 +1,7 @@
 {
   "name": "instagram-node-lib",
   "description": "This package is a wrapper for the Instagram API.",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "author": "David W. McKelvey <david@mckelveycreative.com> (http://david.mckelveycreative.com/)",
   "contributors": [],
   "keywords": [
