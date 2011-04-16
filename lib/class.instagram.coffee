@@ -21,7 +21,7 @@ class InstagramAPI
         'Accept': 'application/json'
         'Content-Length': 0
       }
-    for module in ['media', 'likes', 'comments', 'tags', 'users', 'locations', 'geographies', 'subscriptions', 'oauth']
+    for module in ['media', 'tags', 'users', 'locations', 'geographies', 'subscriptions', 'oauth']
       moduleClass = require "./class.instagram.#{module}"
       @[module] = new moduleClass @
 

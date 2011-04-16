@@ -17,9 +17,7 @@ class InstagramOAuth
     if parsedUrl['query']['error']?
       @parent._error "#{parsedUrl['query']['error']}: #{parsedUrl['query']['error_reason']}: #{parsedUrl['query']['error_description']}", parsedUrl['query'], 'handshake'
     else if parsedUrl['query']['code']?
-      params['response'].writeHead 200, { 'Content-Length': 0, 'Content-Type': 'text/plain' }
-      params['response'].end()
-      params =
+      token_params =
         complete: params['complete']
         method: "POST"
         path: "/oauth/access_token"
@@ -29,7 +27,11 @@ class InstagramOAuth
           grant_type: 'authorization_code'
           redirect_uri: if params['redirect_uri'] is undefined or params['redirect_uri'] is null then @parent._config.redirect_uri else params['redirect_uri']
           code: parsedUrl['query']['code']
-      console.log params
-      @parent._request params
+      @parent._request token_params
+      if params['redirect']?
+        params['response'].redirect(params['redirect']);
+      else
+        params['response'].writeHead 200, { 'Content-Length': 0, 'Content-Type': 'text/plain' }
+      params['response'].end()
 
 module.exports = InstagramOAuth
