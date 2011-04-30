@@ -1,12 +1,19 @@
 (function() {
   /*
-  Testing Location Methods
-  */  var Instagram, assert, should, test;
+  Test Setup
+  */  var Init, Instagram, app, assert, completed, should, test, to_do;
   console.log("\nInstagram API Node.js Lib Tests :: Locations");
-  Instagram = require('../lib/class.instagram');
+  Init = require('./initialize');
+  Instagram = Init.Instagram;
+  app = Init.app;
   assert = require('assert');
   should = require('should');
-  test = require('./helpers.js');
+  test = require('./helpers');
+  completed = 0;
+  to_do = 0;
+  /*
+  Tests
+  */
   module.exports = {
     'locations#info for id#1': function() {
       return test.helper('locations#info for id#1', Instagram, 'locations', 'info', {
@@ -17,7 +24,8 @@
         data.latitude.should.be.above(0);
         test.output("data had the property 'latitude' greater than zero", data.latitude);
         data.longitude.should.be.below(0);
-        return test.output("data had the property 'longitude' less than zero", data.longitude);
+        test.output("data had the property 'longitude' less than zero", data.longitude);
+        return app.finish_test();
       });
     },
     'locations#recent for id#1': function() {
@@ -31,7 +39,8 @@
         pagination.should.have.property('next_url');
         test.output("pagination had the property 'next_url'", pagination.next_url);
         pagination.should.have.property('next_max_id' || pagination.should.have.property('next_min_id'));
-        return test.output("pagination had the property 'next_max_id' or 'next_min_id'", pagination);
+        test.output("pagination had the property 'next_max_id' or 'next_min_id'", pagination);
+        return app.finish_test();
       });
     },
     'locations#search for 48.858844300000001/2.2943506': function() {
@@ -44,8 +53,48 @@
         data[0].should.have.property('id');
         test.output("data[0] had the property 'id'", data[0].id);
         data[0].should.have.property('name');
-        return test.output("data[0] had the property 'name'", data[0].name);
+        test.output("data[0] had the property 'name'", data[0].name);
+        return app.finish_test();
+      });
+    },
+    'locations#subscriptions': function() {
+      return test.helper("locations#subscriptions subscribe to location '1257285'", Instagram, 'locations', 'subscribe', {
+        object_id: '1257285'
+      }, function(data) {
+        var subscription_id;
+        data.should.have.property('id');
+        test.output("data had the property 'id'");
+        data.id.should.be.above(0);
+        test.output("data.id was greater than 0", data.id);
+        data.should.have.property('type', 'subscription');
+        test.output("data had the property 'type' equal to 'subscription'", data);
+        subscription_id = data.id;
+        return test.helper('locations#subscriptions list', Instagram, 'subscriptions', 'list', {}, function(data) {
+          var found, i;
+          data.length.should.be.above(0);
+          test.output("data had length greater than 0", data.length);
+          found = false;
+          for (i in data) {
+            if (data[i].id === subscription_id) {
+              found = true;
+            }
+          }
+          if (!found) {
+            throw "subscription not found";
+          }
+          test.output("data had the subscription " + subscription_id);
+          return test.helper("locations#subscriptions unsubscribe from location '1257285'", Instagram, 'locations', 'unsubscribe', {
+            id: subscription_id
+          }, function(data) {
+            if (data !== null) {
+              throw "location '1257285' unsubscribe failed";
+            }
+            test.output("data was null; we unsubscribed from the subscription " + subscription_id);
+            return app.finish_test();
+          });
+        });
       });
     }
   };
+  app.start_tests(module.exports);
 }).call(this);

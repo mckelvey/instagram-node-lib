@@ -1,12 +1,19 @@
 (function() {
   /*
-  Testing Users Methods
-  */  var Instagram, assert, should, test;
+  Test Setup
+  */  var Init, Instagram, app, assert, completed, should, test, to_do;
   console.log("\nInstagram API Node.js Lib Tests :: Users");
-  Instagram = require('../lib/class.instagram');
+  Init = require('./initialize');
+  Instagram = Init.Instagram;
+  app = Init.app;
   assert = require('assert');
   should = require('should');
-  test = require('./helpers.js');
+  test = require('./helpers');
+  completed = 0;
+  to_do = 0;
+  /*
+  Tests
+  */
   module.exports = {
     'users#info for id#291024': function() {
       return test.helper('users#info for id#291024', Instagram, 'users', 'info', {
@@ -15,7 +22,8 @@
         data.should.have.property('id', '291024');
         test.output("data had the property 'id' equal to '291024'");
         data.should.have.property('profile_picture');
-        return test.output("data had the property 'profile_picture'", data.profile_picture);
+        test.output("data had the property 'profile_picture'", data.profile_picture);
+        return app.finish_test();
       });
     },
     'users#self for mckelvey': function() {
@@ -25,7 +33,8 @@
         data[0].should.have.property('id');
         test.output("data[0] had the property 'id'", data[0].id);
         data[0].should.have.property('user');
-        return test.output("data[0] had the property 'user'", data[0].user);
+        test.output("data[0] had the property 'user'", data[0].user);
+        return app.finish_test();
       });
     },
     'users#recent for mckelvey': function() {
@@ -34,7 +43,8 @@
       }, function(data) {
         data.length.should.be.above(0);
         data[0].should.have.property('id');
-        return data[0]['user'].should.have.property('username', 'mckelvey');
+        data[0]['user'].should.have.property('username', 'mckelvey');
+        return app.finish_test();
       });
     },
     'users#search for mckelvey': function() {
@@ -46,7 +56,8 @@
         data[0].should.have.property('username', 'mckelvey');
         test.output("data had the property 'username' equal to 'mckelvey'");
         data[0].should.have.property('id', '291024');
-        return test.output("data had the property 'id' equal to '291024'");
+        test.output("data had the property 'id' equal to '291024'");
+        return app.finish_test();
       });
     },
     'users#follows id#291024': function() {
@@ -54,7 +65,8 @@
         user_id: 291024
       }, function(data, pagination) {
         data.length.should.be.above(0);
-        return data.length.should.be.below(51);
+        data.length.should.be.below(51);
+        return app.finish_test();
       });
     },
     'users#followed_by id#291024': function() {
@@ -64,7 +76,8 @@
         data.length.should.be.above(0);
         test.output("data had length greater than 0");
         data.length.should.be.below(51);
-        return test.output("data had length less than 51", data.length);
+        test.output("data had length less than 51", data.length);
+        return app.finish_test();
       });
     },
     'users#requested_by id#291024': function() {
@@ -72,7 +85,8 @@
         user_id: 291024
       }, function(data, pagination) {
         data.should.have.property('length');
-        return test.output("data had the property 'length'", data.length);
+        test.output("data had the property 'length'", data.length);
+        return app.finish_test();
       });
     },
     'users#relationship with id#291024': function() {
@@ -82,7 +96,8 @@
         data.should.have.property('outgoing_status');
         test.output("data had the property 'outgoing_status'", data.outgoing_status);
         data.should.have.property('incoming_status');
-        return test.output("data had the property 'incoming_status'", data.incoming_status);
+        test.output("data had the property 'incoming_status'", data.incoming_status);
+        return app.finish_test();
       });
     },
     'users#unfollow id#291024': function() {
@@ -110,7 +125,8 @@
                 user_id: 291024
               }, function(data, pagination) {
                 data.should.have.property('outgoing_status', 'follows');
-                return test.output("data had the property 'outgoing_status' equal to 'follows'", data);
+                test.output("data had the property 'outgoing_status' equal to 'follows'", data);
+                return app.finish_test();
               });
             });
           });
@@ -118,4 +134,5 @@
       });
     }
   };
+  app.start_tests(module.exports);
 }).call(this);
