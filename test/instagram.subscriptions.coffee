@@ -43,6 +43,7 @@ Tests
 
 assert = require 'assert'
 should = require 'should'
+test = require './helpers.js'
 
 completed = 0
 to_do = 0
@@ -50,243 +51,106 @@ indent = "   "
 
 module.exports =
   'tags#subscriptions': ->
-    title = "tags#subscriptions"
-    unsubscribe = (subscription_id) ->
-      Instagram.tags.unsubscribe {
-        id: subscription_id
-        complete: (data) ->
-          console.log "\n#{title} unsubscribe from #{subscription_id}\n#{indent}connection/parsing succeeded"
-          try
-            assert.isNull data
-            console.log "#{indent}data met assertions"
-            completed += 1
-          catch e
-            console.log "#{indent}data failed to meet the assertion(s): #{e}"
-            throw e
-        error: (e, data, caller) ->
-          console.log "\n#{title} unsubscribe\n#{indent}connection/parsing failed"
-          console.log "#{indent}error: #{e}\n#{indent}data: #{data}\n#{indent}caller: #{caller}"
-          throw e
-      }
-    list = (subscription_id) ->
-      Instagram.subscriptions.list {
-        complete: (data) ->
-          console.log "\n#{title} list\n#{indent}connection/parsing succeeded"
-          try
-            data.should.not.be.empty
-            console.log "#{indent}data met assertions"
-            unsubscribe subscription_id
-          catch e
-            console.log "#{indent}data failed to meet the assertion(s): #{e}"
-            throw e
-        error: (e, data, caller) ->
-          console.log "\n#{title} list\n#{indent}connection/parsing failed"
-          console.log "#{indent}error: #{e}\n#{indent}data: #{data}\n#{indent}caller: #{caller}"
-          throw e
-      }
-    Instagram.tags.subscribe {
-      object_id: 'blue'
-      callback_url: CALLBACK_URL
-      complete: (data) ->
-        console.log "\n#{title} subscribe#blue\n#{indent}connection/parsing succeeded"
-        try
-          data.should.have.property 'id'
-          data.id.should.be.above 0
-          data.should.have.property 'type', 'subscription'
-          console.log "#{indent}data met assertions"
-          list data['id']
-        catch e
-          console.log "#{indent}data failed to meet the assertion(s): #{e}"
-          throw e
-      error: (e, data, caller) ->
-        console.log "\n#{title} subscribe#blue\n#{indent}connection/parsing failed"
-        console.log "#{indent}error: #{e}\n#{indent}data: #{data}\n#{indent}caller: #{caller}"
-        throw e
-    }
+    test.helper "tags#subscriptions subscribe to 'blue'", Instagram, 'tags', 'subscribe', { object_id: 'blue' }, (data) ->
+      data.should.have.property 'id'
+      test.output "data had the property 'id'"
+      data.id.should.be.above 0
+      test.output "data.id was greater than 0", data.id
+      data.should.have.property 'type', 'subscription'
+      test.output "data had the property 'type' equal to 'subscription'", data
+      subscription_id = data.id
+      test.helper 'tags#subscriptions list', Instagram, 'subscriptions', 'list', {}, (data) ->
+        data.length.should.be.above 0
+        test.output "data had length greater than 0", data.length
+        found = false
+        for i of data
+          found = true if data[i].id is subscription_id
+        throw "subscription not found" if !found
+        test.output "data had the subscription #{subscription_id}"
+        test.helper "tags#subscriptions unsubscribe from 'blue'", Instagram, 'tags', 'unsubscribe', { id: subscription_id }, (data) ->
+          throw "tag 'blue' unsubscribe failed" if data isnt null
+          test.output "data was null; we unsubscribed from the subscription #{subscription_id}"
   'locations#subscriptions': ->
-    title = "locations#subscriptions"
-    unsubscribe = (subscription_id) ->
-      Instagram.locations.unsubscribe {
-        id: subscription_id
-        complete: (data) ->
-          console.log "\n#{title} unsubscribe from #{subscription_id}\n#{indent}connection/parsing succeeded"
-          try
-            assert.isNull data
-            console.log "#{indent}data met assertions"
-            completed += 1
-          catch e
-            console.log "#{indent}data failed to meet the assertion(s): #{e}"
-            throw e
-        error: (e, data, caller) ->
-          console.log "\n#{title} unsubscribe\n#{indent}connection/parsing failed"
-          console.log "#{indent}error: #{e}\n#{indent}data: #{data}\n#{indent}caller: #{caller}"
-          throw e
-      }
-    list = (subscription_id) ->
-      Instagram.subscriptions.list {
-        complete: (data) ->
-          console.log "\n#{title} list\n#{indent}connection/parsing succeeded"
-          try
-            data.should.not.be.empty
-            console.log "#{indent}data met assertions"
-            unsubscribe subscription_id
-          catch e
-            console.log "#{indent}data failed to meet the assertion(s): #{e}"
-            throw e
-        error: (e, data, caller) ->
-          console.log "\n#{title} list\n#{indent}connection/parsing failed"
-          console.log "#{indent}error: #{e}\n#{indent}data: #{data}\n#{indent}caller: #{caller}"
-          throw e
-      }
-    Instagram.locations.subscribe {
-      object_id: '1257285'
-      callback_url: CALLBACK_URL
-      complete: (data) ->
-        console.log "\n#{title} subscribe#1257285\n#{indent}connection/parsing succeeded"
-        try
-          data.should.have.property 'id'
-          data.id.should.be.above 0
-          data.should.have.property 'type', 'subscription'
-          console.log "#{indent}data met assertions"
-          list data['id']
-        catch e
-          console.log "#{indent}data failed to meet the assertion(s): #{e}"
-          throw e
-      error: (e, data, caller) ->
-        console.log "\n#{title} subscribe#1257285\n#{indent}connection/parsing failed"
-        console.log "#{indent}error: #{e}\n#{indent}data: #{data}\n#{indent}caller: #{caller}"
-        throw e
-    }
+    test.helper "locations#subscriptions subscribe to location '1257285'", Instagram, 'locations', 'subscribe', { object_id: '1257285' }, (data) ->
+      data.should.have.property 'id'
+      test.output "data had the property 'id'"
+      data.id.should.be.above 0
+      test.output "data.id was greater than 0", data.id
+      data.should.have.property 'type', 'subscription'
+      test.output "data had the property 'type' equal to 'subscription'", data
+      subscription_id = data.id
+      test.helper 'locations#subscriptions list', Instagram, 'subscriptions', 'list', {}, (data) ->
+        data.length.should.be.above 0
+        test.output "data had length greater than 0", data.length
+        found = false
+        for i of data
+          found = true if data[i].id is subscription_id
+        throw "subscription not found" if !found
+        test.output "data had the subscription #{subscription_id}"
+        test.helper "locations#subscriptions unsubscribe from location '1257285'", Instagram, 'locations', 'unsubscribe', { id: subscription_id }, (data) ->
+          throw "location '1257285' unsubscribe failed" if data isnt null
+          test.output "data was null; we unsubscribed from the subscription #{subscription_id}"
   'media#subscriptions': ->
-    title = "media#subscriptions"
-    unsubscribe = (subscription_id) ->
-      Instagram.media.unsubscribe {
-        id: subscription_id
-        complete: (data) ->
-          console.log "\n#{title} unsubscribe from #{subscription_id}\n#{indent}connection/parsing succeeded"
-          try
-            assert.isNull data
-            console.log "#{indent}data met assertions"
-            completed += 1
-          catch e
-            console.log "#{indent}data failed to meet the assertion(s): #{e}"
-            throw e
-        error: (e, data, caller) ->
-          console.log "\n#{title} unsubscribe\n#{indent}connection/parsing failed"
-          console.log "#{indent}error: #{e}\n#{indent}data: #{data}\n#{indent}caller: #{caller}"
-          throw e
-      }
-    list = (subscription_id) ->
-      Instagram.subscriptions.list {
-        complete: (data) ->
-          console.log "\n#{title} list\n#{indent}connection/parsing succeeded"
-          try
-            data.should.not.be.empty
-            console.log "#{indent}data met assertions"
-            unsubscribe subscription_id
-          catch e
-            console.log "#{indent}data failed to meet the assertion(s): #{e}"
-            throw e
-        error: (e, data, caller) ->
-          console.log "\n#{title} list\n#{indent}connection/parsing failed"
-          console.log "#{indent}error: #{e}\n#{indent}data: #{data}\n#{indent}caller: #{caller}"
-          throw e
-      }
-    Instagram.media.subscribe {
-      lat: 48.858844300000001
-      lng: 2.2943506
-      radius: 1000
-      callback_url: CALLBACK_URL
-      complete: (data) ->
-        console.log "\n#{title} subscribe#48.858844300000001/2.2943506\n#{indent}connection/parsing succeeded"
-        try
+    test.helper "media#subscriptions subscribe to media near Eiffel Tower", Instagram, 'media', 'subscribe', { lat: 48.858844300000001, lng: 2.2943506, radius: 1000 }, (data) ->
+      data.should.have.property 'id'
+      test.output "data had the property 'id'"
+      data.id.should.be.above 0
+      test.output "data.id was greater than 0", data.id
+      data.should.have.property 'type', 'subscription'
+      test.output "data had the property 'type' equal to 'subscription'", data
+      subscription_id = data.id
+      test.helper 'media#subscriptions list', Instagram, 'subscriptions', 'list', {}, (data) ->
+        data.length.should.be.above 0
+        test.output "data had length greater than 0", data.length
+        found = false
+        for i of data
+          found = true if data[i].id is subscription_id
+        throw "subscription not found" if !found
+        test.output "data had the subscription #{subscription_id}"
+        test.helper "media#subscriptions unsubscribe from media near Eiffel Tower", Instagram, 'media', 'unsubscribe', { id: subscription_id }, (data) ->
+          throw "media near Eiffel Tower unsubscribe failed" if data isnt null
+          test.output "data was null; we unsubscribed from the subscription #{subscription_id}"
+  'multi#subscriptions': ->
+    subscriptions = []
+    test.helper "subscriptions subscribe to tag 'red'", Instagram, 'subscriptions', 'subscribe', { object: 'tag', object_id: 'red' }, (data) ->
+      data.should.have.property 'id'
+      test.output "data had the property 'id'"
+      data.id.should.be.above 0
+      test.output "data.id was greater than 0", data.id
+      data.should.have.property 'type', 'subscription'
+      test.output "data had the property 'type' equal to 'subscription'", data
+      subscriptions[subscriptions.length] = data.id
+      test.helper "subscriptions subscribe to location '1257285'", Instagram, 'subscriptions', 'subscribe', { object: 'location', object_id: '1257285' }, (data) ->
+        data.should.have.property 'id'
+        test.output "data had the property 'id'"
+        data.id.should.be.above 0
+        test.output "data.id was greater than 0", data.id
+        data.should.have.property 'type', 'subscription'
+        test.output "data had the property 'type' equal to 'subscription'", data
+        subscriptions[subscriptions.length] = data.id
+        test.helper "subscriptions subscribe to media near Eiffel Tower", Instagram, 'subscriptions', 'subscribe', { object: 'geography', lat: 48.858844300000001, lng: 2.2943506, radius: 1000 }, (data) ->
           data.should.have.property 'id'
+          test.output "data had the property 'id'"
           data.id.should.be.above 0
+          test.output "data.id was greater than 0", data.id
           data.should.have.property 'type', 'subscription'
-          console.log "#{indent}data met assertions"
-          list data['id']
-        catch e
-          console.log "#{indent}data failed to meet the assertion(s): #{e}"
-          throw e
-      error: (e, data, caller) ->
-        console.log "\n#{title} subscribe#48.858844300000001/2.2943506\n#{indent}connection/parsing failed"
-        console.log "#{indent}error: #{e}\n#{indent}data: #{data}\n#{indent}caller: #{caller}"
-        throw e
-    }
-  'subscriptions': ->
-    title = "subscriptions"
-    unsubscribe = (ids) ->
-      Instagram.subscriptions.unsubscribe_all {
-        complete: (data) ->
-          console.log "\n#{title} unsubscribe_all\n#{indent}connection/parsing succeeded"
-          try
-            assert.isNull data
-            console.log "#{indent}data met assertions"
-            completed += 1
-          catch e
-            console.log "#{indent}data failed to meet the assertion(s): #{e}"
-            throw e
-        error: (e, data, caller) ->
-          console.log "\n#{title} unsubscribe_all\n#{indent}connection/parsing failed"
-          console.log "#{indent}error: #{e}\n#{indent}data: #{data}\n#{indent}caller: #{caller}"
-          throw e
-      }
-    list = (ids) ->
-      Instagram.subscriptions.list {
-        complete: (data) ->
-          console.log "\n#{title} list\n#{indent}connection/parsing succeeded"
-          try
-            data.length.should.equal 2
-            console.log "#{indent}data met assertions"
-            unsubscribe ids
-          catch e
-            console.log "#{indent}data failed to meet the assertion(s): #{e}"
-            throw e
-        error: (e, data, caller) ->
-          console.log "\n#{title} list\n#{indent}connection/parsing failed"
-          console.log "#{indent}error: #{e}\n#{indent}data: #{data}\n#{indent}caller: #{caller}"
-          throw e
-      }
-    subscribe_again = (ids) ->
-      Instagram.subscriptions.subscribe {
-        object: 'tag'
-        object_id: 'green'
-        complete: (data) ->
-          console.log "\n#{title} subscribe#green\n#{indent}connection/parsing succeeded"
-          try
-            data.should.have.property 'id'
-            data.id.should.be.above 0
-            data.should.have.property 'type', 'subscription'
-            console.log "#{indent}data met assertions"
-            ids[ids.length] = data['id']
-            list ids
-          catch e
-            console.log "#{indent}data failed to meet the assertion(s): #{e}"
-            throw e
-        error: (e, data, caller) ->
-          console.log "\n#{title} subscribe#green\n#{indent}connection/parsing failed"
-          console.log "#{indent}error: #{e}\n#{indent}data: #{data}\n#{indent}caller: #{caller}"
-          throw e
-      }
-    Instagram.subscriptions.subscribe {
-      object: 'tag'
-      object_id: 'red'
-      complete: (data) ->
-        console.log "\n#{title} subscribe#red\n#{indent}connection/parsing succeeded"
-        try
-          data.should.have.property 'id'
-          data.id.should.be.above 0
-          data.should.have.property 'type', 'subscription'
-          console.log "#{indent}data met assertions"
-          subscribe_again [data['id']]
-        catch e
-          console.log "#{indent}data failed to meet the assertion(s): #{e}"
-          throw e
-      error: (e, data, caller) ->
-        console.log "\n#{title} subscribe#red\n#{indent}connection/parsing failed"
-        console.log "#{indent}error: #{e}\n#{indent}data: #{data}\n#{indent}caller: #{caller}"
-        throw e
-    }
+          test.output "data had the property 'type' equal to 'subscription'", data
+          subscriptions[subscriptions.length] = data.id
+          test.helper 'subscriptions list', Instagram, 'subscriptions', 'list', {}, (data) ->
+            data.length.should.be.above 0
+            test.output "data had length greater than 0", data.length
+            subscriptions_list = []
+            for i of data
+              subscriptions_list[subscriptions_list.length] = data[i].id
+            found = true
+            for i of subscriptions
+              found = false if subscriptions[i] not in subscriptions_list
+            throw "subscription not found" if !found
+            test.output "data had the subscription #{subscription_id}"
+            test.helper "subscriptions unsubscribe_all", Instagram, 'subscriptions', 'unsubscribe_all', {}, (data) ->
+              throw "unsubscribe_all failed" if data isnt null
+              test.output "data was null; we unsubscribed from the subscriptions #{subscriptions_list.join(', ')}"
+
 
 ###
 App Termination
