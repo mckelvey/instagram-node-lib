@@ -96,5 +96,12 @@
       });
     }
   };
+  /*
+    'locations#recent for id#1 with count of 50': ->
+      test.helper 'locations#recent for id#1 with count of 50', Instagram, 'locations', 'recent', { location_id: 1, count: 50 }, (data, pagination) ->
+        data.length.should.equal 49
+        test.output "data had length of 49"
+        app.finish_test()
+  */
   app.start_tests(module.exports);
 }).call(this);

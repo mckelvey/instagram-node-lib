@@ -94,4 +94,12 @@ module.exports =
           test.output "data was null; we unsubscribed from the subscription #{subscription_id}"
           app.finish_test()
 
+###
+  'media#search for 30.30/-97.70 with count of 42': ->
+    test.helper 'media#search for 30.30/-97.70 with count of 42', Instagram, 'media', 'search', { lat: 30.30, lng: -97.70, distance: 5000, count: 42 }, (data) ->
+      data.length.should.equal 42
+      test.output "data had length equal to 42", data.length
+      app.finish_test()
+###
+
 app.start_tests module.exports

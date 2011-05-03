@@ -41,6 +41,11 @@ module.exports =
       pagination.should.have.property 'next_min_id'
       test.output "pagination had the property 'next_min_id'", pagination.next_min_id
       app.finish_test()
+  'tags#recent for blue with count of 50': ->
+    test.helper 'tags#recent for blue with count of 50', Instagram, 'tags', 'recent', { name: 'blue', count: 50 }, (data, pagination) ->
+      data.length.should.equal 50
+      test.output "data had length equal to 50"
+      app.finish_test()
   'tags#search for blue': ->
     test.helper 'tags#search for blue', Instagram, 'tags', 'search', { q: 'blue' }, (data) ->
       data.length.should.be.above 0

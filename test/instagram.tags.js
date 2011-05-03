@@ -43,6 +43,16 @@
         return app.finish_test();
       });
     },
+    'tags#recent for blue with count of 50': function() {
+      return test.helper('tags#recent for blue with count of 50', Instagram, 'tags', 'recent', {
+        name: 'blue',
+        count: 50
+      }, function(data, pagination) {
+        data.length.should.equal(50);
+        test.output("data had length equal to 50");
+        return app.finish_test();
+      });
+    },
     'tags#search for blue': function() {
       return test.helper('tags#search for blue', Instagram, 'tags', 'search', {
         q: 'blue'
