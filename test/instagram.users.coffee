@@ -43,6 +43,11 @@ module.exports =
       data[0].should.have.property 'id'
       data[0]['user'].should.have.property 'username', 'mckelvey'
       app.finish_test()
+  'users#recent for mckelvey with count 60': ->
+    test.helper 'users#recent for mckelvey with count 60', Instagram, 'users', 'recent', { user_id: 291024, count: 60 }, (data) ->
+      data.length.should.equal 60
+      test.output "data had length equal to 60", data.length
+      app.finish_test()
   'users#search for mckelvey': ->
     test.helper 'users#search for mckelvey', Instagram, 'users', 'search', { q: 'mckelvey' }, (data) ->
       data.length.should.be.above 0
@@ -52,10 +57,20 @@ module.exports =
       data[0].should.have.property 'id', '291024'
       test.output "data had the property 'id' equal to '291024'"
       app.finish_test()
+  'users#search for i with count': ->
+    test.helper 'users#search for i with count', Instagram, 'users', 'search', { q: 'i', count: 50 }, (data) ->
+      data.length.should.equal 50
+      test.output "data had length equal to 50", data.length
+      app.finish_test()
   'users#follows id#291024': ->
     test.helper 'users#follows id#291024', Instagram, 'users', 'follows', { user_id: 291024 }, (data, pagination) ->
       data.length.should.be.above 0
       data.length.should.be.below 51
+      app.finish_test()
+  'users#follows id#291024 with count 50': ->
+    test.helper 'users#follows id#291024 with count 50', Instagram, 'users', 'follows', { user_id: 291024, count: 50 }, (data, pagination) ->
+      data.length.should.equal 50 
+      test.output "data had length equal to 50", data.length
       app.finish_test()
   'users#followed_by id#291024': ->
     test.helper 'users#followed_by id#291024', Instagram, 'users', 'followed_by', { user_id: 291024 }, (data, pagination) ->
@@ -63,6 +78,11 @@ module.exports =
       test.output "data had length greater than 0"
       data.length.should.be.below 51
       test.output "data had length less than 51", data.length
+      app.finish_test()
+  'users#followed_by id#291024 with count 50': ->
+    test.helper 'users#followed_by id#291024 with count 50', Instagram, 'users', 'followed_by', { user_id: 291024, count: 50 }, (data, pagination) ->
+      data.length.should.equal 50 
+      test.output "data had length equal to 50", data.length
       app.finish_test()
   'users#requested_by id#291024': ->
     test.helper 'users#requested_by id#291024', Instagram, 'users', 'requested_by', { user_id: 291024 }, (data, pagination) ->
@@ -93,5 +113,15 @@ module.exports =
               data.should.have.property 'outgoing_status', 'follows'
               test.output "data had the property 'outgoing_status' equal to 'follows'", data
               app.finish_test()
+
+###
+for me, returns 9 regardless, requesting with count seems to have no impact Ñ time based only now?
+
+  'users#self for mckelvey with count 200': ->
+    test.helper 'users#self for mckelvey with count 200', Instagram, 'users', 'self', { count: 200 }, (data) ->
+      data.length.should.equal 200
+      test.output "data had length equal to 200", data.length
+      app.finish_test()
+###
 
 app.start_tests module.exports

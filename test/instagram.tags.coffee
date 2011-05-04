@@ -77,4 +77,14 @@ module.exports =
           test.output "data was null; we unsubscribed from the subscription #{subscription_id}"
           app.finish_test()
 
+###
+seems to max out at 49 rather than 100 (ruby api docs) otherwise works perfectly
+
+  'tags#search for sex with count 200': ->
+    test.helper 'tags#search for sex with count 200', Instagram, 'tags', 'search', { q: 'sex', count: 200 }, (data) ->
+      data.length.should.equal 200
+      test.output "data had length equal to 200", data.length
+      app.finish_test()
+###
+
 app.start_tests module.exports

@@ -47,6 +47,16 @@
         return app.finish_test();
       });
     },
+    'users#recent for mckelvey with count 60': function() {
+      return test.helper('users#recent for mckelvey with count 60', Instagram, 'users', 'recent', {
+        user_id: 291024,
+        count: 60
+      }, function(data) {
+        data.length.should.equal(60);
+        test.output("data had length equal to 60", data.length);
+        return app.finish_test();
+      });
+    },
     'users#search for mckelvey': function() {
       return test.helper('users#search for mckelvey', Instagram, 'users', 'search', {
         q: 'mckelvey'
@@ -60,12 +70,32 @@
         return app.finish_test();
       });
     },
+    'users#search for i with count': function() {
+      return test.helper('users#search for i with count', Instagram, 'users', 'search', {
+        q: 'i',
+        count: 50
+      }, function(data) {
+        data.length.should.equal(50);
+        test.output("data had length equal to 50", data.length);
+        return app.finish_test();
+      });
+    },
     'users#follows id#291024': function() {
       return test.helper('users#follows id#291024', Instagram, 'users', 'follows', {
         user_id: 291024
       }, function(data, pagination) {
         data.length.should.be.above(0);
         data.length.should.be.below(51);
+        return app.finish_test();
+      });
+    },
+    'users#follows id#291024 with count 50': function() {
+      return test.helper('users#follows id#291024 with count 50', Instagram, 'users', 'follows', {
+        user_id: 291024,
+        count: 50
+      }, function(data, pagination) {
+        data.length.should.equal(50);
+        test.output("data had length equal to 50", data.length);
         return app.finish_test();
       });
     },
@@ -77,6 +107,16 @@
         test.output("data had length greater than 0");
         data.length.should.be.below(51);
         test.output("data had length less than 51", data.length);
+        return app.finish_test();
+      });
+    },
+    'users#followed_by id#291024 with count 50': function() {
+      return test.helper('users#followed_by id#291024 with count 50', Instagram, 'users', 'followed_by', {
+        user_id: 291024,
+        count: 50
+      }, function(data, pagination) {
+        data.length.should.equal(50);
+        test.output("data had length equal to 50", data.length);
         return app.finish_test();
       });
     },
@@ -134,5 +174,14 @@
       });
     }
   };
+  /*
+  for me, returns 9 regardless, requesting with count seems to have no impact � time based only now?
+
+    'users#self for mckelvey with count 200': ->
+      test.helper 'users#self for mckelvey with count 200', Instagram, 'users', 'self', { count: 200 }, (data) ->
+        data.length.should.equal 200
+        test.output "data had length equal to 200", data.length
+        app.finish_test()
+  */
   app.start_tests(module.exports);
 }).call(this);

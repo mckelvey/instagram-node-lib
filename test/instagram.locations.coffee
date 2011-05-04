@@ -50,6 +50,11 @@ module.exports =
       data[0].should.have.property 'name'
       test.output "data[0] had the property 'name'", data[0].name
       app.finish_test()
+  'locations#search for 40.77/-73.98 with count 60': ->
+    test.helper 'locations#search for 40.77/-73.98 with count 60', Instagram, 'locations', 'search', { lat: 40.77, lng: -73.98, distance: 5000, count: 60 }, (data) ->
+      data.length.should.equal 60
+      test.output "data had length of 60", data.length
+      app.finish_test()
   'locations#subscriptions': ->
     test.helper "locations#subscriptions subscribe to location '1257285'", Instagram, 'locations', 'subscribe', { object_id: '1257285' }, (data) ->
       data.should.have.property 'id'
@@ -73,6 +78,8 @@ module.exports =
           app.finish_test()
 
 ###
+count seems to return n-1 results; e.g. request 50 returns 49, request 30 returns 29,...
+
   'locations#recent for id#1 with count of 50': ->
     test.helper 'locations#recent for id#1 with count of 50', Instagram, 'locations', 'recent', { location_id: 1, count: 50 }, (data, pagination) ->
       data.length.should.equal 49
