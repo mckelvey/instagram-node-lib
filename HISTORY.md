@@ -1,4 +1,10 @@
 
+0.0.4 / 2011-05-03 
+==================
+
+  * Added additional tests
+  * Handled ENOTCONN errors (IG closes the connection fast)
+
 0.0.3 / 2011-04-15 
 ==================
 
