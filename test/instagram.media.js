@@ -149,7 +149,7 @@
   };
   /*
   tested on Austin, Tx. { lat: 30.30, lng: -97.70, distance: 5000 }; weird, request with count 200 produces 54, request with count 50 produces 46, request with count 46 produces 42, request with count 42 produces 38... I think you see the pattern. :)
-
+  
     'media#search for 30.30/-97.70 with count of 42': ->
       test.helper 'media#search for 30.30/-97.70 with count of 42', Instagram, 'media', 'search', { lat: 30.30, lng: -97.70, distance: 5000, count: 42 }, (data) ->
         data.length.should.equal 42

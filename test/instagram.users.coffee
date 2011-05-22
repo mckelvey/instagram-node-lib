@@ -37,6 +37,27 @@ module.exports =
       data[0].should.have.property 'user'
       test.output "data[0] had the property 'user'", data[0].user
       app.finish_test()
+  'users#liked_by_self for mckelvey': ->
+    test.helper 'users#liked_by_self for mckelvey', Instagram, 'users', 'liked_by_self', {}, (data) ->
+      data.length.should.be.above 0
+      test.output "data had length greater than 0", data.length
+      data[0].should.have.property 'id'
+      test.output "data[0] had the property 'id'", data[0].id
+      data[0].should.have.property 'user'
+      test.output "data[0] had the property 'user'", data[0].user
+      app.finish_test()
+  'users#liked_by_self for mckelvey with count of 3 and max_like_id': ->
+    test.helper 'users#liked_by_self for mckelvey with count of 3', Instagram, 'users', 'liked_by_self', { count: 3 }, (data, pagination) ->
+      data.length.should.equal 3
+      test.output "data had length equal to 3"
+      pagination.next_url.should.include.string('count=3')
+      test.output "pagination next_url included count of 3", pagination.next_url
+      pagination.should.have.property 'next_max_like_id'
+      test.output "pagination had the property 'next_max_like_id'", pagination.next_max_like_id
+      test.helper "users#liked_by_self for mckelvey with max_like_id of #{pagination.next_max_like_id}", Instagram, 'users', 'liked_by_self', { max_like_id: pagination.next_max_like_id }, (data, pagination) ->
+        data.length.should.be.above 0
+        test.output "data had length greater than 0", data.length
+        app.finish_test()
   'users#recent for mckelvey': ->
     test.helper 'users#recent for mckelvey', Instagram, 'users', 'recent', { user_id: 291024 }, (data) ->
       data.length.should.be.above 0

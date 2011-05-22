@@ -29,7 +29,7 @@ When successful, the data logged in the console would be a javascript object lik
 
 To use the library, you'll need to require it and at minimum, set your CLIENT_ID and CLIENT_SECRET given to you by Instagram.
 
-    Instagram = require('instagram');
+    Instagram = require('instagram-node-lib');
 
     Instagram.set('client_id', 'YOUR-CLIENT-ID');
     Instagram.set('client_secret', 'YOUR-CLIENT-SECRET');
@@ -305,6 +305,15 @@ Search for matching users by name (q).
 Get the user media feed for the `access_token` supplied. This method obviously then requires `access_token` rather than simply `client_id`; see the OAuth section on obtaining an `access_token`. You can either supply it here or set it within the library.
 
     Instagram.users.self();
+      ->  [ { media object },
+            { media object },
+            { media object }, ... ]
+
+#### Liked by Self
+
+Get the media that has been liked by the user for the `access_token` supplied. This method obviously then requires `access_token` rather than simply `client_id`; see the OAuth section on obtaining an `access_token`. You can either supply it here or set it within the library.
+
+    Instagram.users.liked_by_self();
       ->  [ { media object },
             { media object },
             { media object }, ... ]
