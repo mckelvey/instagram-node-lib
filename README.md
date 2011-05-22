@@ -438,7 +438,7 @@ In order to perform specific methods upon user data, you will need to have autho
 To obtain a user url for the link to Instagram, use the authorization_url method. You can include the optional parameters as needed, but be sure to use spaces instead of pluses (as they will be encoded to pluses).
 
     url = Instagram.oauth.authorization_url({
-      scope: 'comments likes' // use a space when specifying a scope; it will be encoded into a space
+      scope: 'comments likes' // use a space when specifying a scope; it will be encoded into a plus
       display: 'touch'
     });
 
@@ -464,7 +464,7 @@ Hey, this is my first Node.js project, my first NPM package, and my first public
 
 If you add additional functionality, your pull request must have corresponding additional tests and supporting documentation.
 
-I've used [CoffeeScript](http://jashkenas.github.com/coffee-script) to write this library. If you haven't tried it, I highly recommend it. CoffeeScript takes some of the work out of javascript structures, with only an occasional mis-understanding. (Definitely check your compiled code when getting an error.) Refer to the CoffeeScript docs for installation and usage. 
+I've used [CoffeeScript](http://jashkenas.github.com/coffee-script) to write this library. If you haven't tried it, I highly recommend it. CoffeeScript takes some of the work out of javascript structures. Refer to the CoffeeScript docs for installation and usage. 
 
 ### Tests
 
@@ -474,4 +474,4 @@ There is a test suite in the /tests folder with the tests I used to ensure the l
     npm install expresso
     npm install should
 
-In addition, either export or add to your shell profile your CLIENT_ID, CLIENT_SECRET, and CALLBACK_URL so that they are available during testing via process.env.
+In addition, either export or add to your shell profile your CLIENT_ID, CLIENT_SECRET, ACCESS_TOKEN (if applicable) and CALLBACK_URL so that they are available during testing.
