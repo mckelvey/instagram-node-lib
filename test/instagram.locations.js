@@ -110,7 +110,7 @@
   };
   /*
   count seems to return n-1 results; e.g. request 50 returns 49, request 30 returns 29,...
-
+  
     'locations#recent for id#1 with count of 50': ->
       test.helper 'locations#recent for id#1 with count of 50', Instagram, 'locations', 'recent', { location_id: 1, count: 50 }, (data, pagination) ->
         data.length.should.equal 49

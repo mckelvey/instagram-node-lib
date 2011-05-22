@@ -37,6 +37,36 @@
         return app.finish_test();
       });
     },
+    'users#liked_by_self for mckelvey': function() {
+      return test.helper('users#liked_by_self for mckelvey', Instagram, 'users', 'liked_by_self', {}, function(data) {
+        data.length.should.be.above(0);
+        test.output("data had length greater than 0", data.length);
+        data[0].should.have.property('id');
+        test.output("data[0] had the property 'id'", data[0].id);
+        data[0].should.have.property('user');
+        test.output("data[0] had the property 'user'", data[0].user);
+        return app.finish_test();
+      });
+    },
+    'users#liked_by_self for mckelvey with count of 3 and max_like_id': function() {
+      return test.helper('users#liked_by_self for mckelvey with count of 3', Instagram, 'users', 'liked_by_self', {
+        count: 3
+      }, function(data, pagination) {
+        data.length.should.equal(3);
+        test.output("data had length equal to 3");
+        pagination.next_url.should.include.string('count=3');
+        test.output("pagination next_url included count of 3", pagination.next_url);
+        pagination.should.have.property('next_max_like_id');
+        test.output("pagination had the property 'next_max_like_id'", pagination.next_max_like_id);
+        return test.helper("users#liked_by_self for mckelvey with max_like_id of " + pagination.next_max_like_id, Instagram, 'users', 'liked_by_self', {
+          max_like_id: pagination.next_max_like_id
+        }, function(data, pagination) {
+          data.length.should.be.above(0);
+          test.output("data had length greater than 0", data.length);
+          return app.finish_test();
+        });
+      });
+    },
     'users#recent for mckelvey': function() {
       return test.helper('users#recent for mckelvey', Instagram, 'users', 'recent', {
         user_id: 291024
@@ -176,7 +206,7 @@
   };
   /*
   for me, returns 9 regardless, requesting with count seems to have no impact � time based only now?
-
+  
     'users#self for mckelvey with count 200': ->
       test.helper 'users#self for mckelvey with count 200', Instagram, 'users', 'self', { count: 200 }, (data) ->
         data.length.should.equal 200

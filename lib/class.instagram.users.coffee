@@ -26,6 +26,11 @@ class InstagramUsers
     params['path'] = "/#{@parent._api_version}/users/self/feed?#{@parent._to_querystring(params)}"
     @parent._request params
 
+  liked_by_self: (params) ->
+    params = @parent._credentials params, 'access_token'
+    params['path'] = "/#{@parent._api_version}/users/self/media/liked?#{@parent._to_querystring(params)}"
+    @parent._request params
+
   recent: (params) ->
     params = @parent._credentials params, 'access_token'
     params['path'] = "/#{@parent._api_version}/users/#{params['user_id']}/media/recent?#{@parent._to_querystring(params)}"
