@@ -30,8 +30,6 @@ class InstagramOAuth
       @parent._request token_params
       if params['redirect']?
         params['response'].redirect(params['redirect']);
-      else
-        params['response'].writeHead 200, { 'Content-Length': 0, 'Content-Type': 'text/plain' }
       params['response'].end()
 
 module.exports = InstagramOAuth
