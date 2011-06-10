@@ -34,6 +34,21 @@ app.get PATH,
   (request, response) ->
     Instagram.subscriptions.handshake request, response
 
+app.get '/oauth',
+  (request, response) ->
+    Instagram.oauth.ask_for_access_token {
+      request: request,
+      response: response,
+      respond: (response) ->
+        response.redirect('/oauth/success')
+        response.end()
+    }
+
+app.get '/oauth/success',
+  (request, response) ->
+    response.writeHead 200, {'Content-Type': 'text/plain'}
+    response.end('Successful\n')
+
 app.listen PORT
 
 ###
@@ -58,5 +73,7 @@ Exports
 ###
 
 module.exports = 
+  host: HOST
+  port: PORT
   app: app
   Instagram: Instagram

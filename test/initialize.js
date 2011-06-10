@@ -31,6 +31,22 @@
   app.get(PATH, function(request, response) {
     return Instagram.subscriptions.handshake(request, response);
   });
+  app.get('/oauth', function(request, response) {
+    return Instagram.oauth.ask_for_access_token({
+      request: request,
+      response: response,
+      respond: function(response) {
+        response.redirect('/oauth/success');
+        return response.end();
+      }
+    });
+  });
+  app.get('/oauth/success', function(request, response) {
+    response.writeHead(200, {
+      'Content-Type': 'text/plain'
+    });
+    return response.end('Successful\n');
+  });
   app.listen(PORT);
   /*
   Add-on App Test Monitoring
@@ -53,6 +69,8 @@
   Exports
   */
   module.exports = {
+    host: HOST,
+    port: PORT,
     app: app,
     Instagram: Instagram
   };
