@@ -450,14 +450,14 @@ To obtain a user url for the link to Instagram, use the authorization_url method
 
 #### Ask for an Access Token
 
-The example below uses Express to specify a route to respond to the user's return from Instagram. It will pass the access_token and user object returned to a provided complete function. It is recommended that you provide a `redirect` path for the return, but do realize the end-user may arrive at that page prior to the retrieval of the `access_token` due the event model.
+The example below uses Express to specify a route to respond to the user's return from Instagram. It will pass the access_token and user object returned to a provided complete function. Your complete function should handle the server response (passed as a parameter).
 
     app.get('/oauth', function(request, response){
       Instagram.oauth.ask_for_access_token({
         request: request,
         response: response,
-        redirect: 'http://your.app/home',
         complete: function(params){
+          // params['response']
           // params['access_token']
           // params['user']
         }
@@ -466,7 +466,7 @@ The example below uses Express to specify a route to respond to the user's retur
 
 ## Developers
 
-Hey, this is my first Node.js project, my first NPM package, and my first public repo (and happy to finally be giving back for all the code I've enjoyed over the years). If you have suggestions please email me, register an issue, fork and branch, etc. (You know the routine probably better than I.)
+Hey, this is my first Node.js project, my first NPM package, and my first public repo (and happy to finally be giving back for all the code I've enjoyed over the years). If you have suggestions please email me, register an issue, fork (dev please) and branch, etc. (You know the routine probably better than I.)
 
 If you add additional functionality, your pull request must have corresponding additional tests and supporting documentation.
 
