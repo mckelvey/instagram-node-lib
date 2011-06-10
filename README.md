@@ -472,6 +472,10 @@ If you add additional functionality, your pull request must have corresponding a
 
 I've used [CoffeeScript](http://jashkenas.github.com/coffee-script) to write this library. If you haven't tried it, I highly recommend it. CoffeeScript takes some of the work out of javascript structures. Refer to the CoffeeScript docs for installation and usage. 
 
+## Contributors
+
+Andrew Senter (andrew@phenotypic.co.uk)
+
 ### Tests
 
 There is a test suite in the /tests folder with the tests I used to ensure the library functions as intended. If you're adding or changing functionality, please add to or update the corresponding tests before issuing a pull request. The tests require [Express](https://github.com/visionmedia/express), [Expresso](https://github.com/visionmedia/expresso) and [Should](https://github.com/visionmedia/should.js):
