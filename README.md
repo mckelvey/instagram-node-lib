@@ -450,14 +450,19 @@ To obtain a user url for the link to Instagram, use the authorization_url method
 
 #### Ask for an Access Token
 
-The example below uses Express to specify a route to respond to the user's return from Instagram. It will pass the access_token and user object returned to a provided complete function. Your complete function should handle the server response (passed as a parameter).
+The example below uses Express to specify a route to respond to the user's return from Instagram. It will pass the access_token and user object returned to a provided complete function. Your respond function should handle the server response (passed as a parameter) as shown below. Versions of instagram-node-lib prior to 0.0.6 accepted the redirect parameter (now deprecated).
 
     app.get('/oauth', function(request, response){
       Instagram.oauth.ask_for_access_token({
         request: request,
         response: response,
-        complete: function(params){
-          // params['response']
+        redirect: 'http://your.redirect/url', // deprecated
+        respond: function(response){
+          response.redirect('http://your.redirect/url');
+          // or some other response ended with
+          response.end();
+        },
+        complete: function(params, response){
           // params['access_token']
           // params['user']
         }
@@ -472,9 +477,9 @@ If you add additional functionality, your pull request must have corresponding a
 
 I've used [CoffeeScript](http://jashkenas.github.com/coffee-script) to write this library. If you haven't tried it, I highly recommend it. CoffeeScript takes some of the work out of javascript structures. Refer to the CoffeeScript docs for installation and usage. 
 
-## Contributors
+### Contributors
 
-Andrew Senter (andrew@phenotypic.co.uk)
+[Andrew Senter](https://github.com/andrewsenter) — added more controlled response for OAuth
 
 ### Tests
 

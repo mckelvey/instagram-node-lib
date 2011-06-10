@@ -28,8 +28,12 @@ class InstagramOAuth
           redirect_uri: if params['redirect_uri'] is undefined or params['redirect_uri'] is null then @parent._config.redirect_uri else params['redirect_uri']
           code: parsedUrl['query']['code']
       @parent._request token_params
-      if params['redirect']?
+      if params['respond']?
+        return params['respond'](params['response'])
+      else if params['redirect']?
         params['response'].redirect(params['redirect']);
+      else
+        params['response'].writeHead 200, { 'Content-Length': 0, 'Content-Type': 'text/plain' }
       params['response'].end()
 
 module.exports = InstagramOAuth
