@@ -2,3 +2,7 @@
 # Remove Coffeescript #
 #######################
 *.coffee
+
+# Remove Testing Environment #
+##############################
+*.sh
