@@ -17,7 +17,7 @@ class InstagramAPI
       method: "GET"
       path: ''
       headers: {
-        'User-Agent': 'Instagram Node Lib 0.0.5'
+        'User-Agent': 'Instagram Node Lib 0.0.6'
         'Accept': 'application/json'
         'Content-Length': 0
       }
@@ -97,9 +97,12 @@ class InstagramAPI
 
   _request: (params) ->
     options = @_clone(@_options)
-    options['path'] = params['path'] if params['path']?
+    options['host'] = params['host'] if params['host']?
+    options['port'] = params['port'] if params['port']?
     options['method'] = params['method'] if params['method']?
+    options['path'] = params['path'] if params['path']?
     complete = params['complete'] ?= @_complete
+    appResponse = params['response']
     error = params['error'] ?= @_error
     if options['method'] isnt "GET" and params['post_data']?
       post_data = @_to_querystring params['post_data']
@@ -117,7 +120,7 @@ class InstagramAPI
           if parsedResponse? and parsedResponse['meta']? and parsedResponse['meta']['code'] isnt 200
             error parsedResponse['meta']['error_type'], parsedResponse['meta']['error_message'], "_request"
           else if parsedResponse['access_token']?
-            complete parsedResponse
+            complete parsedResponse, appResponse
           else
             pagination = if typeof parsedResponse['pagination'] is 'undefined' then {} else parsedResponse['pagination']
             complete parsedResponse['data'], pagination

@@ -12,28 +12,27 @@ class InstagramOAuth
     return "https://#{@parent._options['host']}/oauth/authorize/?#{@parent._to_querystring(params)}"
 
   ask_for_access_token: (params) ->
-    parsedUrl = url.parse(params['request'].url, true)
-    console.log parsedUrl
-    if parsedUrl['query']['error']?
-      @parent._error "#{parsedUrl['query']['error']}: #{parsedUrl['query']['error_reason']}: #{parsedUrl['query']['error_description']}", parsedUrl['query'], 'handshake'
-    else if parsedUrl['query']['code']?
+    parsed_query = url.parse(params['request'].url, true).query
+    if parsed_query.error?
+      @parent._error "#{parsed_query.error}: #{parsed_query.error_reason}: #{parsed_query.error_description}", parsed_query, 'handshake'
+    else if parsed_query.code?
+      console.log "SURPRISE"
       token_params =
         complete: params['complete']
+        response: params['response']
+        host: if process.env['TEST_HOST']? then process.env['TEST_HOST'] else @parent._options['host']
+        port: if process.env['TEST_PORT']? then process.env['TEST_PORT'] else @parent._options['port']
         method: "POST"
-        path: "/oauth/access_token"
+        path: if process.env['TEST_HOST']? then "/fake/oauth/access_token" else "/oauth/access_token"
         post_data:
           client_id: @parent._config.client_id
           client_secret: @parent._config.client_secret
           grant_type: 'authorization_code'
           redirect_uri: if params['redirect_uri'] is undefined or params['redirect_uri'] is null then @parent._config.redirect_uri else params['redirect_uri']
-          code: parsedUrl['query']['code']
+          code: parsed_query.code
       @parent._request token_params
-      if params['respond']?
-        return params['respond'](params['response'])
-      else if params['redirect']?
+      if params['redirect']?
         params['response'].redirect(params['redirect']);
-      else
-        params['response'].writeHead 200, { 'Content-Length': 0, 'Content-Type': 'text/plain' }
-      params['response'].end()
+        params['response'].end()
 
 module.exports = InstagramOAuth

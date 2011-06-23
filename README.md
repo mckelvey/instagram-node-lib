@@ -450,13 +450,13 @@ To obtain a user url for the link to Instagram, use the authorization_url method
 
 #### Ask for an Access Token
 
-The example below uses Express to specify a route to respond to the user's return from Instagram. It will pass the access_token and user object returned to a provided complete function. Your respond function should handle the server response (passed as a parameter) as shown below. Versions of instagram-node-lib prior to 0.0.6 accepted the redirect parameter (now deprecated).
+The example below uses Express to specify a route to respond to the user's return from Instagram. It will pass the access_token and user object returned to a provided complete function. Your complete function should handle the server response (passed as a parameter) *or* include a redirect parameter for simple redirects. Be advised however, due to the event model of node.js, your users may reach the redirect address before the complete method is executed.
 
     app.get('/oauth', function(request, response){
       Instagram.oauth.ask_for_access_token({
         request: request,
         response: response,
-        redirect: 'http://your.redirect/url', // deprecated
+        redirect: 'http://your.redirect/url', // optional
         respond: function(response){
           response.redirect('http://your.redirect/url');
           // or some other response ended with
