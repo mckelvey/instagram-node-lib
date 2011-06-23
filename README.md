@@ -492,7 +492,10 @@ I've used [CoffeeScript](http://jashkenas.github.com/coffee-script) to write thi
 
 ### Contributors
 
-[Andrew Senter](https://github.com/andrewsenter) — added more controlled response for OAuth
+[Andrew Senter](https://github.com/andrewsenter)
+[Olivier Balais](https://github.com/bobey)
+
+Both Andrew and Olivier suggested better ways of handling the server response when requesting a token during OAuth.
 
 ### Tests
 
