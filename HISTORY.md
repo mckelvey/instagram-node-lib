@@ -1,4 +1,12 @@
 
+0.0.7 / 2011-06-23 
+==================
+
+  * Added more control for server responses in oauth.ask_for_access_token
+  * Added Instagram.oauth tests
+  * Added Instagram.set tests
+  * Added test server option (mostly for oauth testing)
+
 0.0.6 / 2011-06-09 
 ==================
 

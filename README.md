@@ -42,6 +42,10 @@ If you intend to use user-specific methods (e.g. relationships), then you must a
 
     Instagram.set('redirect_uri', 'YOUR-REDIRECT-URI');
 
+Lastly, if you find that the default max sockets of 5 is too few for the http(s) client, you can increase it as needed with the set method. The new max sockets value must be a positive integer greater than zero.
+
+    Instagram.set('maxSockets', 10);
+
 ## Available Methods
 
 All of the methods below follow a similar pattern. Each accepts a single javascript object with the needed parameters to complete the API call. Required parameters are shown below; refer to [the API docs](http://instagram.com/developer/endpoints/) for the optional parameters. All parameters are passed through to the request, so use the exact terms that the API docs provide.
@@ -450,23 +454,32 @@ To obtain a user url for the link to Instagram, use the authorization_url method
 
 #### Ask for an Access Token
 
-The example below uses Express to specify a route to respond to the user's return from Instagram. It will pass the access_token and user object returned to a provided complete function. Your complete function should handle the server response (passed as a parameter) *or* include a redirect parameter for simple redirects. Be advised however, due to the event model of node.js, your users may reach the redirect address before the complete method is executed.
+The example below uses Express to specify a route to respond to the user's return from Instagram. It will pass the access_token and user object returned to a provided complete function. Your complete and error functions should handle your app server response (passed as a parameter for oauth only) *or* include a redirect parameter for simple redirects.
+
+If you choose to use the simple redirect, be advised that due to the event model of node.js, your users may reach the redirect address before the complete method is executed.
 
     app.get('/oauth', function(request, response){
       Instagram.oauth.ask_for_access_token({
         request: request,
         response: response,
         redirect: 'http://your.redirect/url', // optional
-        respond: function(response){
-          response.redirect('http://your.redirect/url');
-          // or some other response ended with
-          response.end();
-        },
         complete: function(params, response){
           // params['access_token']
           // params['user']
+          response.writeHead(200, {'Content-Type': 'text/plain'});
+          // or some other response ended with
+          response.end();
+        },
+        error: function(errorMessage, errorObject, caller, response){
+          // errorMessage is the raised error message
+          // errorObject is either the object that caused the issue, or the nearest neighbor
+          // caller is the method in which the error occurred
+          response.writeHead(406, {'Content-Type': 'text/plain'});
+          // or some other response ended with
+          response.end();
         }
       });
+      return null;
     });
 
 ## Developers

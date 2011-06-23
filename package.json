@@ -1,7 +1,7 @@
 {
   "name": "instagram-node-lib",
   "description": "This package is a wrapper for the Instagram API.",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "author": "David W. McKelvey <david@mckelveycreative.com> (http://david.mckelveycreative.com/)",
   "contributors": [],
   "keywords": [
@@ -25,6 +25,7 @@
     "url": "git://github.com/mckelvey/instagram-node-lib.git"
   },
   "scripts": {
+    "test set": "expresso ./test/instagram.js"
     "test geographies": "expresso ./test/instagram.geographies.js",
     "test locations": "expresso ./test/instagram.locations.js",
     "test media": "expresso ./test/instagram.media.js",

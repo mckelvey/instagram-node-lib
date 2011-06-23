@@ -4,20 +4,22 @@ querystring = require 'querystring'
 class InstagramAPI
   constructor: ->
     @_api_version = 'v1'
-    @_client = require 'https'
+    @_http_client = require 'http'
+    @_https_client = require 'https'
     @_config =
       client_id: if process.env['CLIENT_ID']? then process.env['CLIENT_ID'] else 'CLIENT-ID'
       client_secret: if process.env['CLIENT_SECRET']? then process.env['CLIENT_SECRET'] else 'CLIENT-SECRET'
       callback_url: if process.env['CALLBACK_URL']? then process.env['CALLBACK_URL'] else 'CALLBACK-URL'
       redirect_uri: if process.env['REDIRECT_URI']? then process.env['REDIRECT_URI'] else 'REDIRECT_URI'
       access_token: if process.env['ACCESS_TOKEN']? then process.env['ACCESS_TOKEN'] else null
+      maxSockets: 5
     @_options =
-      host: 'api.instagram.com'
-      port: null
+      host: if process.env['TEST_HOST']? then process.env['TEST_HOST'] else 'api.instagram.com'
+      port: if process.env['TEST_PORT']? then process.env['TEST_PORT'] else null
       method: "GET"
       path: ''
       headers: {
-        'User-Agent': 'Instagram Node Lib 0.0.6'
+        'User-Agent': 'Instagram Node Lib 0.0.7'
         'Accept': 'application/json'
         'Content-Length': 0
       }
@@ -73,12 +75,18 @@ class InstagramAPI
     to_object
 
   ###
-  Generic Methods
+  Set Methods
   ###
+
+  _set_maxSockets: (value) ->
+    if parseInt(value) is value and value > 0
+      @_http_client.Agent.defaultMaxSockets = value
+      @_https_client.Agent.defaultMaxSockets = value
 
   set: (property, value) ->
     @_config[property] = value if @_config[property] isnt undefined
     @_options[property] = value if @_options[property] isnt undefined
+    @["_set_#{property}"](value) if typeof @["_set_#{property}"] is 'function'
 
   ###
   Shared Request Methods
@@ -97,10 +105,9 @@ class InstagramAPI
 
   _request: (params) ->
     options = @_clone(@_options)
-    options['host'] = params['host'] if params['host']?
-    options['port'] = params['port'] if params['port']?
     options['method'] = params['method'] if params['method']?
     options['path'] = params['path'] if params['path']?
+    options['path'] = if process.env['TEST_PATH_PREFIX']? then "#{process.env['TEST_PATH_PREFIX']}#{options['path']}" else options['path']
     complete = params['complete'] ?= @_complete
     appResponse = params['response']
     error = params['error'] ?= @_error
@@ -109,7 +116,11 @@ class InstagramAPI
     else
       post_data = ''
     options['headers']['Content-Length'] = post_data.length
-    request = @_client.request options, (response) ->
+    if process.env['TEST_PROTOCOL'] is 'http'
+      http_client = @_http_client
+    else
+      http_client = @_https_client
+    request = http_client.request options, (response) ->
       data = ''
       response.setEncoding 'utf8'
       response.on 'data', (chunk) ->
@@ -125,7 +136,10 @@ class InstagramAPI
             pagination = if typeof parsedResponse['pagination'] is 'undefined' then {} else parsedResponse['pagination']
             complete parsedResponse['data'], pagination
         catch e
-          error e, data, '_request'
+          if appResponse?
+            error e, data, '_request', appResponse
+          else
+            error e, data, '_request'
     if post_data?
       request.write post_data
     request.addListener 'error', (connectionException) ->

@@ -45,19 +45,13 @@
     util = require('util');
     should = require('should');
     fake_response = {
-      meta: {
-        code: 200
-      },
-      data: {
-        access_token: 'fb2e77d.47a0479900504cb3ab4a1f626d174d2d',
-        user: {
-          id: 1574083,
-          username: 'snoopdogg',
-          full_name: 'Snoop Dogg',
-          profile_picture: 'http://distillery.s3.amazonaws.com/profiles/profile_1574083_75sq_1295469061.jpg'
-        }
-      },
-      pagination: {}
+      access_token: 'fb2e77d.47a0479900504cb3ab4a1f626d174d2d',
+      user: {
+        id: 1574083,
+        username: 'snoopdogg',
+        full_name: 'Snoop Dogg',
+        profile_picture: 'http://distillery.s3.amazonaws.com/profiles/profile_1574083_75sq_1295469061.jpg'
+      }
     };
     data = '';
     request.on('data', function(chunk) {
@@ -81,97 +75,26 @@
     });
   });
   app.get('/oauth', function(request, response) {
-    var complete, error, http_client, options, parsed_query, post_data, token_request;
-    parsed_query = url.parse(request.url, true).query;
-    if (parsed_query.error != null) {
-      return this.parent._error("" + parsed_query.error + ": " + parsed_query.error_reason + ": " + parsed_query.error_description, parsed_query, 'handshake');
-    } else if (parsed_query.code != null) {
-      ({
-        post_data: {
-          client_id: Instagram._config.client_id,
-          client_secret: Instagram._config.client_secret,
-          grant_type: 'authorization_code',
-          redirect_uri: Instagram._config.redirect_uri,
-          code: parsed_query.code
-        }
-      });
-      options = Instagram._clone(Instagram._options);
-      options['host'] = process.env['TEST_HOST'] != null ? process.env['TEST_HOST'] : Instagram._options['host'];
-      options['port'] = process.env['TEST_PORT'] != null ? process.env['TEST_PORT'] : Instagram._options['port'];
-      options['method'] = "POST";
-      options['path'] = process.env['TEST_HOST'] != null ? "/fake/oauth/access_token" : "/oauth/access_token";
-      post_data = Instagram._to_querystring(post_data);
-      options['headers']['Content-Length'] = post_data.length;
-      complete = function(access, appResponse) {
-        console.log(access);
-        console.log(appResponse);
-        appResponse.writeHead(200, {
+    Instagram.oauth.ask_for_access_token({
+      request: request,
+      response: response,
+      complete: function(access, response) {
+        access.should.have.property('access_token', 'fb2e77d.47a0479900504cb3ab4a1f626d174d2d');
+        console.log("   the fake access token was received", JSON.stringify(access));
+        response.writeHead(200, {
           'Content-Type': 'text/plain'
         });
-        return appResponse.end('Successful End-Of-Chain\n');
-      };
-      error = Instagram._error;
-      http_client = require('http');
-      token_request = http_client.request(options, function(token_response) {
-        var data;
-        data = '';
-        response.setEncoding('utf8');
-        response.on('data', function(chunk) {
-          return data += chunk;
+        return response.end('Successful End-Of-Chain\n');
+      },
+      error: function(e, data, caller, response) {
+        Instagram._error(e, data, caller);
+        response.writeHead(406, {
+          'Content-Type': 'text/plain'
         });
-        return response.on('end', function() {
-          var pagination, parsedResponse;
-          console.log("HERE");
-          try {
-            parsedResponse = JSON.parse(data);
-            if ((parsedResponse != null) && (parsedResponse['meta'] != null) && parsedResponse['meta']['code'] !== 200) {
-              return error(parsedResponse['meta']['error_type'], parsedResponse['meta']['error_message'], "_request");
-            } else if (parsedResponse['access_token'] != null) {
-              return complete(parsedResponse, response);
-            } else {
-              pagination = typeof parsedResponse['pagination'] === 'undefined' ? {} : parsedResponse['pagination'];
-              return complete(parsedResponse['data'], pagination);
-            }
-          } catch (e) {
-            return error(e, data, '_request');
-          }
-        });
-      });
-      if (post_data != null) {
-        token_request.write(post_data);
+        return response.end('Failure End-Of-Chain\n');
       }
-      token_request.addListener('error', function(connectionException) {
-        if (connectionException.code !== 'ENOTCONN') {
-          console.log("\n" + connectionException);
-          throw connectionException;
-        }
-      });
-      return token_request.end();
-    }
-    /*
-        Instagram.oauth.ask_for_access_token {
-          request: request,
-          response: response,
-          complete: (access, appResponse) ->
-            console.log access
-            console.log appResponse
-            appResponse.writeHead 200, {'Content-Type': 'text/plain'}
-            appResponse.end('Successful End-Of-Chain\n')
-        }
-        fake_response =
-          meta:
-            code: 200
-          data:
-            access_token: 'fb2e77d.47a0479900504cb3ab4a1f626d174d2d'
-            user:
-              id: 1574083
-              username: 'snoopdogg'
-              full_name: 'Snoop Dogg'
-              profile_picture: 'http://distillery.s3.amazonaws.com/profiles/profile_1574083_75sq_1295469061.jpg'
-          pagination: {}
-        response.writeHead 200, {'Content-Type': 'application/json'}
-        response.end(JSON.stringify(fake_response))
-        */
+    });
+    return null;
   });
   app.listen(PORT);
   /*
