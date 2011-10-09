@@ -1,4 +1,3 @@
-
 ## What It Is
 
 The Instagram Node Lib is a helper library for [node](http://nodejs.org) that makes communicating with the [Instagram API](http://instagram.com/developer/) easy.
@@ -259,7 +258,7 @@ With a latitude and longitude (and an optional distance), find nearby locations 
             { latitude: 48.858543,
               id: '1894075',
               longitude: 2.2938285,
-              name: 'CafŽ de l\'homme' }, ... ]
+              name: 'Cafï¿½ de l\'homme' }, ... ]
 
 #### Subscriptions
 
@@ -403,7 +402,7 @@ Be sure to include a GET route/method for the callback handshake at the `callbac
 
 The subscription request differs here in that it will not know what kind of object (tag, location, geography) to which you want to subscribe, so be sure to specify it. A `callback_url` is required when subscribing if not specified globally, and you may also provide a `verify_token` if you want to keep track of which subscription is coming back.
 
-    Instagram.subscribe({ object: 'tag', object_id: 'blue' });
+    Instagram.subscriptions.subscribe({ object: 'tag', object_id: 'blue' });
       ->  { object: 'tag',
             object_id: 'blue',
             aspect: 'media',
@@ -415,7 +414,7 @@ The subscription request differs here in that it will not know what kind of obje
 
 Retrieve a list of all your subscriptions.
 
-    Instagram.subscriptions();
+    Instagram.subscriptions.list();
       ->  [ { object: 'tag',
               object_id: 'blue',
               aspect: 'media',
@@ -427,14 +426,14 @@ Retrieve a list of all your subscriptions.
 
 To unsubscribe from a single subscription, you must provide the subscription id.
 
-    Instagram.unsubscribe({ id: # });
+    Instagram.subscriptions.unsubscribe({ id: # });
       ->  null // null is success, an error is failure
 
 #### Unsubscribe All
 
 Unsubscribe from all subscriptions of all kinds.
 
-    Instagram.unsubscribe_all();
+    Instagram.subscriptions.unsubscribe_all();
       ->  null // null is success, an error is failure
 
 ## OAuth
