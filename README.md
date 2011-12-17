@@ -6,7 +6,7 @@ The Instagram Node Lib is a helper library for [node](http://nodejs.org) that ma
 
 Following is an example that loads the library, sets my CLIENT_ID and CLIENT_SECRET for accessing the API and makes a simple call to get information on the tag `#blue`.
 
-    Instagram = require('instagram');
+    Instagram = require('instagram-node-lib');
 
     Instagram.set('client_id', 'YOUR-CLIENT-ID');
     Instagram.set('client_secret', 'YOUR-CLIENT-SECRET');
