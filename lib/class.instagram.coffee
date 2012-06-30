@@ -19,7 +19,7 @@ class InstagramAPI
       method: "GET"
       path: ''
       headers: {
-        'User-Agent': 'Instagram Node Lib 0.0.7'
+        'User-Agent': 'Instagram Node Lib 0.0.9'
         'Accept': 'application/json'
         'Content-Length': 0
       }
