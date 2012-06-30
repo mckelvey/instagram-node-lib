@@ -143,9 +143,7 @@ class InstagramAPI
     if post_data?
       request.write post_data
     request.addListener 'error', (connectionException) ->
-      if connectionException.code isnt 'ENOTCONN'
-        console.log "\n" + connectionException
-        throw connectionException
+      error(connectionException, options, "_request") if connectionException.code isnt 'ENOTCONN'
     request.end()
 
 APIClient = new InstagramAPI
