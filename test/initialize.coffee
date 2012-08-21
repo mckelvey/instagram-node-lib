@@ -19,7 +19,7 @@ if callback?
   PATH = callback['pathname']
 
 express = require 'express'
-app = express.createServer()
+app = express()
 
 app.configure ->
   app.set 'host', HOST

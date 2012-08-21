@@ -92,7 +92,7 @@ class InstagramAPI
   Shared Request Methods
   ###
 
-  _credentials: (params, require = null) ->
+  _credentials: (params = {}, require = null) ->
     if require? and params[require]? or params['access_token']? or params['client_id']?
       return params
     if require isnt null and @_config[require]?

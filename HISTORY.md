@@ -1,4 +1,9 @@
 
+0.1.0 / 2012-08-20 
+==================
+
+  * Fixed Issue #4 -- thanks to @joemccann for the suggestion/code
+
 0.0.7 / 2011-06-23 
 ==================
 

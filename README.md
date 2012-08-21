@@ -493,8 +493,9 @@ I've used [CoffeeScript](http://jashkenas.github.com/coffee-script) to write thi
 
   * [Andrew Senter](https://github.com/andrewsenter)
   * [Olivier Balais](https://github.com/bobey)
+  * [Joe McCann](https://github.com/joemccann)
 
-Both Andrew and Olivier suggested better ways of handling the server response when requesting a token during OAuth.
+Both Andrew and Olivier suggested better ways of handling the server response when requesting a token during OAuth. Joe provided a correction for [issue #4](https://github.com/mckelvey/instagram-node-lib/issues/4).
 
 ### Tests
 
