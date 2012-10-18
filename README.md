@@ -494,8 +494,9 @@ I've used [CoffeeScript](http://jashkenas.github.com/coffee-script) to write thi
   * [Andrew Senter](https://github.com/andrewsenter)
   * [Olivier Balais](https://github.com/bobey)
   * [Joe McCann](https://github.com/joemccann)
+  * [dbrand666](https://github.com/dbrand666)
 
-Both Andrew and Olivier suggested better ways of handling the server response when requesting a token during OAuth. Joe provided a correction for [issue #4](https://github.com/mckelvey/instagram-node-lib/issues/4).
+Both Andrew and Olivier suggested better ways of handling the server response when requesting a token during OAuth. Joe provided a correction for [issue #4](https://github.com/mckelvey/instagram-node-lib/issues/4). dbrand666 made the handling of params consistent for users.info [issue #8](https://github.com/mckelvey/instagram-node-lib/issues/8).
 
 ### Tests
 

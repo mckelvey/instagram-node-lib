@@ -1,4 +1,9 @@
 
+0.1.1 / 2012-10-18 
+==================
+
+  * Fixed Issue #8 -- thanks to @dbrand666 for the pull request
+
 0.1.0 / 2012-08-20 
 ==================
 
