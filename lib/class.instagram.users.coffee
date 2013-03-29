@@ -1,4 +1,3 @@
-
 class InstagramUsers
   constructor: (parent) ->
     @parent = parent
@@ -41,22 +40,22 @@ class InstagramUsers
   ###
 
   follows: (params) ->
-    credentials = @parent._credentials {}, 'access_token'
+    credentials = @parent._credentials params, 'access_token'
     params['path'] = "/#{@parent._api_version}/users/#{params['user_id']}/follows?#{@parent._to_querystring(credentials)}"
     @parent._request params
 
   followed_by: (params) ->
-    credentials = @parent._credentials {}, 'access_token'
+    credentials = @parent._credentials params, 'access_token'
     params['path'] = "/#{@parent._api_version}/users/#{params['user_id']}/followed-by?#{@parent._to_querystring(credentials)}"
     @parent._request params
   
   requested_by: (params) ->
-    credentials = @parent._credentials {}, 'access_token'
+    credentials = @parent._credentials params, 'access_token'
     params['path'] = "/#{@parent._api_version}/users/self/requested-by?#{@parent._to_querystring(credentials)}"
     @parent._request params
 
   relationship: (params) ->
-    credentials = @parent._credentials {}, 'access_token'
+    credentials = @parent._credentials params, 'access_token'
     if params['action']?
       params['method'] = 'POST'
       params['post_data'] =
