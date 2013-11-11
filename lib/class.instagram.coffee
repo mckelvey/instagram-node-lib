@@ -140,6 +140,8 @@ class InstagramAPI
             error e, data, '_request', appResponse
           else
             error e, data, '_request'
+    request.setTimeout 10000, () ->
+      request.abort();
     if post_data?
       request.write post_data
     request.addListener 'error', (connectionException) ->
