@@ -35,6 +35,13 @@ module.exports =
       data.should.have.property 'created_time', '1279315783'
       test.output "data had the property 'created_time' equal to 1279315783"
       app.finish_test()
+  'media#info for shortcode#33': ->
+    test.helper 'media#info for shortcode#33', Instagram, 'media', 'info', { media_shortcode: 33 }, (data) ->
+      data.should.have.property 'shortcode', '33'
+      test.output "data had the property 'shortcode' equal to 33"
+      data.should.have.property 'created_time', '1279315783'
+      test.output "data had the property 'created_time' equal to 1279315783"
+      app.finish_test()
   'media#search for 48.858844300000001/2.2943506': ->
     test.helper 'media#search for 48.858844300000001/2.2943506', Instagram, 'media', 'search', { lat: 48.858844300000001, lng: 2.2943506 }, (data) ->
       data.length.should.be.above 0

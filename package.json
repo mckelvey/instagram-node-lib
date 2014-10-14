@@ -16,6 +16,11 @@
   "directories": {
     "lib": "./lib"
   },
+  "devDependencies": {
+    "express": "3.17.7",
+    "expresso": "*",
+    "should": "*"
+  },
   "files": [
     ""
   ],
