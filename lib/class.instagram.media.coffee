@@ -14,7 +14,11 @@ class InstagramMedia
 
   info: (params) ->
     credentials = @parent._credentials {}
-    params['path'] = "/#{@parent._api_version}/media/#{params['media_id']}?#{@parent._to_querystring(credentials)}"
+    if params['shortcode'] == null
+      params['path'] = "/#{@parent._api_version}/media/#{params['media_id']}?#{@parent._to_querystring(credentials)}"
+    else
+      params['path'] = "/#{@parent._api_version}/media/shortcode/#{params['shortcode']}?#{@parent._to_querystring(credentials)}"
+    end
     @parent._request params
 
   search: (params) ->

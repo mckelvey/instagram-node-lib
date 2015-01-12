@@ -86,6 +86,12 @@ Get the metadata for a single media item by media id.
     Instagram.media.info({ media_id: 3 });
       ->  { media object }
 
+Get the metadata for a single media item by shortcode. 
+
+    Instagram.media.info({ shortcode: 'xuYRgzLDcS' });
+      ->  { media object }
+
+
 #### Search
 
 With a latitude and longitude (and an optional distance), find nearby media by geography.
