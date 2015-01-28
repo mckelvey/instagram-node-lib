@@ -53,7 +53,9 @@ In addition, the parameters object may include two functions, one of which will 
 
     {
       name: 'blue',
-      complete: function(data, pagination){
+      complete: function(data, pagination, remaining){
+          console.log(remaining); //±5000
+          // remaining(int) parameter used for get data of the remaining 1 hour queries to API Instagram
           // data is a javascript object/array/null matching that shipped Instagram
           // when available (mostly /recent), pagination is a javascript object with the pagination information
           // for example use cursor pagination in the follows or other methods
